@@ -15,7 +15,14 @@ import {
   Check, 
   ArrowRight,
   Menu,
-  X
+  X,
+  Bone,
+  Smile,
+  Zap,
+  Leaf,
+  MapPin,
+  Wind,
+  Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -25,7 +32,18 @@ interface Product {
   name: string;
   description: string;
   image: string;
-  benefits: string[];
+  benefits: {
+    icon: any;
+    text: string;
+  }[];
+  process: {
+    step: string;
+    label: string;
+    title: string;
+    description: string;
+    icon: any;
+    image: string;
+  }[];
   options: {
     size: string;
     price: number;
@@ -54,10 +72,36 @@ const PRODUCTS: Product[] = [
     description: 'Dehydrated chicken feet. A natural source of glucosamine and chondroitin for healthy joints.',
     image: 'https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&q=80&w=800',
     benefits: [
-      'Natural Glucosamine & Chondroitin for Joint Support',
-      'Promotes Dental Hygiene through Chewing Action',
-      'Rich in Bio-available Collagen',
-      'Grain-Free & Low in Fat'
+      { icon: Bone, text: 'Natural Glucosamine & Chondroitin for Joint Support' },
+      { icon: Smile, text: 'Promotes Dental Hygiene through Chewing Action' },
+      { icon: Zap, text: 'Rich in Bio-available Collagen' },
+      { icon: Leaf, text: 'Grain-Free & Low in Fat' }
+    ],
+    process: [
+      {
+        step: '01',
+        label: 'Origin',
+        title: 'Locally Sourced',
+        description: 'Supporting local Sri Lankan farmers while ensuring the shortest supply chain for maximum freshness.',
+        icon: MapPin,
+        image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=600'
+      },
+      {
+        step: '02',
+        label: 'Process',
+        title: 'Low-Temp Air Dried',
+        description: 'We dehydrate our treats at precise temperatures to preserve vital nutrients and enzymes without harsh additives.',
+        icon: Wind,
+        image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600'
+      },
+      {
+        step: '03',
+        label: 'Integrity',
+        title: 'No Additives',
+        description: 'Absolutely zero salt, sugar, preservatives, or artificial colors. Just 100% natural chicken feet.',
+        icon: Shield,
+        image: 'https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&q=80&w=600'
+      }
     ],
     options: [
       { size: '12 Pieces', price: 499, image: 'https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&q=80&w=400' },
@@ -71,9 +115,36 @@ const PRODUCTS: Product[] = [
     description: 'Premium liquid collagen for dogs. Supports skin elasticity, coat shine, and joint mobility.',
     image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=800',
     benefits: [
-      'Improves Skin Elasticity & Coat Shine',
-      'Supports Healthy Gut Lining',
-      'Aids in Muscle & Tissue Repair'
+      { icon: Zap, text: 'Improves Skin Elasticity & Coat Shine' },
+      { icon: Shield, text: 'Supports Healthy Gut Lining' },
+      { icon: Bone, text: 'Aids in Muscle & Tissue Repair' },
+      { icon: Sparkles, text: '100% Bio-available Nutrients' }
+    ],
+    process: [
+      {
+        step: '01',
+        label: 'Sourcing',
+        title: 'Ethically Farmed',
+        description: 'Our beef collagen is sourced from grass-fed cattle, ensuring a pure and ethical supply chain.',
+        icon: Leaf,
+        image: 'https://images.unsplash.com/photo-1502472545331-cb294ee1648c?auto=format&fit=crop&q=80&w=600'
+      },
+      {
+        step: '02',
+        label: 'Craft',
+        title: 'Small Batch Extraction',
+        description: 'Simmered slowly at low temperatures to preserve the delicate peptide structures of the collagen.',
+        icon: Sparkles,
+        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=600'
+      },
+      {
+        step: '03',
+        label: 'Purity',
+        title: 'Triple Filtration',
+        description: 'Fine filtration ensures a smooth, highly concentrated liquid collagen free from any sediment or additives.',
+        icon: Shield,
+        image: 'https://images.unsplash.com/photo-1626224734893-6902967675e4?auto=format&fit=crop&q=80&w=600'
+      }
     ],
     options: [
       { size: '250ml Jar', price: 999, image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=400' },
@@ -86,9 +157,36 @@ const PRODUCTS: Product[] = [
     description: 'Iron-rich, protein-packed dehydrated liver bites. The ultimate high-value training reward.',
     image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=800',
     benefits: [
-      'Concentrated Source of Vitamin A & Iron',
-      'Highly Palatable for Training',
-      'Supports Cognitive Health'
+      { icon: Zap, text: 'Concentrated Source of Vitamin A & Iron' },
+      { icon: Smile, text: 'Highly Palatable for Training' },
+      { icon: Shield, text: 'Supports Cognitive Health' },
+      { icon: Heart, text: 'Zero Fillers or Preservatives' }
+    ],
+    process: [
+      {
+        step: '01',
+        label: 'Quality',
+        title: 'Premium Raw Cuts',
+        description: 'We select only the finest human-grade liver, ensuring every bite is packed with vitamins.',
+        icon: Check,
+        image: 'https://images.unsplash.com/photo-1607623198457-7aad0d6a8348?auto=format&fit=crop&q=80&w=600'
+      },
+      {
+        step: '02',
+        label: 'Care',
+        title: 'Precision Slicing',
+        description: 'Bite-sized pieces are carefully cut to maintain texture while allowing for even dehydration.',
+        icon: Sparkles,
+        image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=600'
+      },
+      {
+        step: '03',
+        label: 'Nature',
+        title: 'Fresh Dehydration',
+        description: 'Cold-air dehydration locks in nutrition without compromising the high-value flavor profile.',
+        icon: Wind,
+        image: 'https://images.unsplash.com/photo-1591769225440-811ad7d62ca3?auto=format&fit=crop&q=80&w=600'
+      }
     ],
     options: [
       { size: '50g Bag', price: 399, image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=400' },
@@ -398,42 +496,53 @@ export default function App() {
               {/* Benefits Section */}
               <section className="bg-white border-t border-brand-border p-8 md:p-16 lg:p-24">
                 <div className="max-w-6xl mx-auto">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 block mb-12 text-center">Beyond the Crunch</span>
+                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 block mb-16 text-center">Beyond the Crunch</span>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                    {PRODUCTS[0].benefits.map((benefit, i) => (
-                      <div key={i} className="flex flex-col items-center text-center">
-                        <div className="w-10 h-10 bg-emerald-900/5 rounded-full flex items-center justify-center mb-6">
-                          <Check className="w-5 h-5 text-emerald-800" />
+                    {PRODUCTS[activeHeroIdx].benefits.map((benefit, i) => (
+                      <div key={i} className="flex flex-col items-center text-center group">
+                        <div className="w-16 h-16 bg-emerald-900/5 rounded-full flex items-center justify-center mb-8 group-hover:bg-emerald-900 group-hover:text-white transition-all duration-500">
+                          <benefit.icon className="w-6 h-6 transition-transform group-hover:scale-110" />
                         </div>
-                        <p className="font-serif italic text-lg leading-tight">{benefit}</p>
+                        <p className="font-serif italic text-xl leading-snug px-4">{benefit.text}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               </section>
 
-              {/* Info Blocks */}
-              <section className="border-t border-brand-border p-8 md:p-16 lg:p-24 grid grid-cols-1 md:grid-cols-3 gap-16">
-                 <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest text-emerald-800 font-bold mb-4">Origin</span>
-                  <h4 className="text-2xl font-serif italic mb-3">Locally Sourced</h4>
-                  <p className="text-sm text-gray-500 font-light leading-relaxed">
-                    Supporting local Sri Lankan farmers while ensuring the shortest supply chain for maximum freshness.
-                  </p>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest text-emerald-800 font-bold mb-4">Process</span>
-                  <h4 className="text-2xl font-serif italic mb-3">Low-Temp Air Dried</h4>
-                  <p className="text-sm text-gray-500 font-light leading-relaxed">
-                    We dehydrate our treats at precise temperatures to preserve vital nutrients and enzymes without harsh additives.
-                  </p>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest text-emerald-800 font-bold mb-4">Integrity</span>
-                  <h4 className="text-2xl font-serif italic mb-3">No Additives</h4>
-                  <p className="text-sm text-gray-500 font-light leading-relaxed">
-                    Absolutely zero salt, sugar, preservatives, or artificial colors. Just 100% natural chicken feet.
-                  </p>
+              {/* Process Flow Section */}
+              <section className="border-t border-brand-border p-8 md:p-16 lg:p-24 overflow-hidden">
+                <div className="max-w-6xl mx-auto">
+                  <div className="flex flex-col md:flex-row items-stretch justify-between gap-0 border border-brand-border rounded-[2rem] overflow-hidden bg-white">
+                    {PRODUCTS[activeHeroIdx].process.map((item, i) => (
+                      <div key={i} className={`flex-1 flex flex-col group relative ${i !== 2 ? 'md:border-r border-brand-border' : ''}`}>
+                        <div className="aspect-[16/10] overflow-hidden relative">
+                          <img 
+                            src={item.image} 
+                            alt={item.title} 
+                            className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" 
+                          />
+                          <div className="absolute inset-0 bg-emerald-950/20 group-hover:bg-transparent transition-colors"></div>
+                          <div className="absolute top-6 left-6 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-[10px] font-bold tracking-widest text-emerald-900 border border-emerald-900/10">
+                            {item.step}
+                          </div>
+                        </div>
+                        <div className="p-10 flex flex-col flex-1">
+                          <div className="flex items-center gap-3 mb-6">
+                            <item.icon className="w-4 h-4 text-emerald-800/40" />
+                            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-800/40">{item.label}</span>
+                          </div>
+                          <h4 className="text-3xl font-serif italic mb-4">{item.title}</h4>
+                          <p className="text-sm text-gray-500 font-light leading-relaxed mb-8">
+                            {item.description}
+                          </p>
+                          <div className="mt-auto pt-8 border-t border-brand-border/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[9px] uppercase tracking-widest font-bold text-emerald-800">Learn about our standards →</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </section>
             </motion.div>
@@ -474,8 +583,8 @@ export default function App() {
                             <ul className="space-y-3">
                               {product.benefits.map((benefit, i) => (
                                 <li key={i} className="flex items-start gap-3 text-sm font-light text-gray-600">
-                                  <Check className="w-4 h-4 text-emerald-800 mt-0.5 flex-shrink-0" />
-                                  {benefit}
+                                  <benefit.icon className="w-4 h-4 text-emerald-800 mt-0.5 flex-shrink-0" />
+                                  {benefit.text}
                                 </li>
                               ))}
                             </ul>
