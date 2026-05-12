@@ -22,9 +22,36 @@ import {
   Leaf,
   MapPin,
   Wind,
-  Shield
+  Shield,
+  User,
+  Package,
+  Truck,
+  History,
+  CreditCard,
+  CloudUpload,
+  AlertCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { 
+  auth, 
+  db, 
+  signInWithGoogle, 
+  logOut, 
+  handleFirestoreError, 
+  OperationType 
+} from './lib/firebase';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  onSnapshot, 
+  serverTimestamp, 
+  orderBy,
+  doc,
+  updateDoc
+} from 'firebase/firestore';
 
 // Types
 interface Product {
@@ -197,7 +224,7 @@ const PRODUCTS: Product[] = [
 ];
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'products'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'products' | 'dashboard'>('home');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<Record<string, number>>({
@@ -206,6 +233,35 @@ export default function App() {
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subFrequency, setSubFrequency] = useState(30);
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
+
+  // Firebase Auth & Database State
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      if (u) {
+        setIsLoadingOrders(true);
+        const q = query(
+          collection(db, 'orders'), 
+          where('userId', '==', u.uid),
+          orderBy('createdAt', 'desc')
+        );
+        const unsubOrders = onSnapshot(q, (snapshot) => {
+          setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+          setIsLoadingOrders(false);
+        }, (error) => {
+          handleFirestoreError(error, OperationType.LIST, 'orders');
+        });
+        return unsubOrders;
+      } else {
+        setOrders([]);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -216,8 +272,9 @@ export default function App() {
     return () => clearInterval(timer);
   }, [currentView]);
 
-  const [checkoutStep, setCheckoutStep] = useState<'cart' | 'info'>('cart');
+  const [checkoutStep, setCheckoutStep] = useState<'cart' | 'info' | 'payment' | 'success'>('cart');
   const [contactInfo, setContactInfo] = useState({ name: '', phone: '', address: '' });
+  const [lastOrderId, setLastOrderId] = useState<string | null>(null);
 
   const cartTotal = useMemo(() => 
     cart.reduce((sum, item) => {
@@ -259,19 +316,69 @@ export default function App() {
     setCheckoutStep('cart');
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
+    if (!user) {
+      const result = await signInWithGoogle();
+      if (!result) return;
+      return; // User is now signed in, allow them to click again or continue
+    }
+
     if (checkoutStep === 'cart') {
       setCheckoutStep('info');
-    } else {
+    } else if (checkoutStep === 'info') {
       if (!contactInfo.name || !contactInfo.phone || !contactInfo.address) {
         alert("Please fill in all contact details.");
         return;
       }
-      alert(`Thank you ${contactInfo.name}! Your order for LKR ${cartTotal.toLocaleString()} has been received. We will contact you at ${contactInfo.phone} to confirm delivery.`);
-      setCart([]);
-      setCheckoutStep('cart');
-      setIsCartOpen(false);
-      setContactInfo({ name: '', phone: '', address: '' });
+      setCheckoutStep('payment');
+    } else if (checkoutStep === 'payment') {
+      // Create Order in Firestore
+      try {
+        const orderData = {
+          userId: user.uid,
+          items: cart,
+          total: cartTotal,
+          status: 'pending_payment',
+          contactInfo,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        };
+        const docRef = await addDoc(collection(db, 'orders'), orderData);
+        setLastOrderId(docRef.id);
+        setCheckoutStep('success');
+        setCart([]);
+      } catch (error) {
+        handleFirestoreError(error, OperationType.WRITE, 'orders');
+      }
+    }
+  };
+
+  const uploadReceipt = async (order: any, receiptNote: string) => {
+    try {
+      const orderRef = doc(db, 'orders', order.id);
+      await updateDoc(orderRef, {
+        paymentReceipt: receiptNote,
+        status: 'paid',
+        updatedAt: serverTimestamp(),
+        receiptTimestamp: serverTimestamp()
+      });
+
+      // Send Email Notification to Admin
+      await fetch('/api/notify-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: order.id,
+          orderEmail: user?.email || 'N/A',
+          total: order.total,
+          userDetails: order.contactInfo,
+          items: order.items,
+          receiptNote
+        })
+      });
+
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, `orders/${order.id}`);
     }
   };
 
@@ -330,6 +437,31 @@ export default function App() {
           </div>
           
           <div className="flex items-center gap-8">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => setCurrentView('dashboard')}
+                  className={`text-[10px] tracking-[0.2em] uppercase font-bold transition-colors flex items-center gap-2 ${currentView === 'dashboard' ? 'text-emerald-900' : 'text-gray-400 hover:text-emerald-800'}`}
+                >
+                  <History className="w-4 h-4" /> My Orders
+                </button>
+                <div className="h-4 w-[1px] bg-brand-border"></div>
+                <button 
+                  onClick={logOut}
+                  className="text-[10px] tracking-[0.2em] uppercase font-bold text-gray-400 hover:text-red-800 transition-colors"
+                >
+                  Logout
+                </button>
+                <img src={user.photoURL || ''} alt="" className="w-8 h-8 rounded-full border border-brand-border" referrerPolicy="no-referrer" />
+              </div>
+            ) : (
+              <button 
+                onClick={() => signInWithGoogle()}
+                className="text-[10px] tracking-[0.2em] uppercase font-bold text-emerald-900 border border-emerald-900 px-4 py-2 hover:bg-emerald-900 hover:text-white transition-all"
+              >
+                Sign In
+              </button>
+            )}
             <button 
               onClick={() => { setIsCartOpen(true); setCheckoutStep('cart'); }}
               className="relative p-2 hover:bg-gray-100 rounded-full transition-colors group"
@@ -546,7 +678,7 @@ export default function App() {
                 </div>
               </section>
             </motion.div>
-          ) : (
+          ) : currentView === 'products' ? (
             <motion.div
               key="products"
               initial={{ opacity: 0, y: 10 }}
@@ -661,6 +793,131 @@ export default function App() {
                 </div>
               </div>
             </motion.div>
+          ) : (
+            <motion.div
+              key="dashboard"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="p-8 md:p-16 lg:p-24"
+            >
+              <div className="max-w-6xl mx-auto">
+                <header className="mb-20 flex justify-between items-end">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 block mb-4">Account Dashboard</span>
+                    <h2 className="text-6xl font-serif italic">Your Orders</h2>
+                  </div>
+                  <p className="text-gray-400 font-light italic">Tracking status for artisanal nourishment</p>
+                </header>
+
+                {isLoadingOrders ? (
+                  <div className="py-20 text-center opacity-40 font-serif italic text-2xl">Retrieving your order history...</div>
+                ) : orders.length === 0 ? (
+                  <div className="py-20 text-center border border-dashed border-brand-border rounded-[2rem] bg-emerald-900/5">
+                    <History className="w-12 h-12 text-emerald-900/20 mx-auto mb-6" />
+                    <p className="font-serif italic text-3xl mb-4">No orders yet</p>
+                    <button 
+                      onClick={() => setCurrentView('products')}
+                      className="text-xs uppercase tracking-widest font-bold text-emerald-900 border-b border-emerald-900 pb-1"
+                    >
+                      Browse the collection
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-12">
+                    {orders.map((order) => (
+                      <div key={order.id} className="bg-white border border-brand-border rounded-[2rem] overflow-hidden shadow-sm group">
+                        {/* Order Header */}
+                        <div className="p-8 bg-brand-bg flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-brand-border">
+                          <div>
+                            <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 block mb-1">Order ID: {order.id.slice(0, 8)}</span>
+                            <span className="text-sm font-medium">{new Date(order.createdAt?.seconds * 1000).toLocaleDateString()} — LKR {order.total.toLocaleString()}</span>
+                          </div>
+                          
+                          {/* Order Status Timeline */}
+                          <div className="flex items-center gap-8">
+                            {[
+                              { label: 'Packed', status: 'packed', icon: Package },
+                              { label: 'Shipped', status: 'shipped', icon: Truck },
+                              { label: 'Delivered', status: 'delivered', icon: Check }
+                            ].map((step, i) => {
+                              const isActive = order.status === step.status || 
+                                (step.status === 'packed' && ['shipped', 'delivered'].includes(order.status)) ||
+                                (step.status === 'shipped' && order.status === 'delivered');
+                              
+                              return (
+                                <div key={step.label} className="flex items-center gap-2 relative">
+                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-emerald-900 text-white shadow-lg' : 'bg-gray-100 text-gray-300'}`}>
+                                    <step.icon className="w-4 h-4" />
+                                  </div>
+                                  <span className={`text-[10px] uppercase tracking-widest font-bold ${isActive ? 'text-emerald-900' : 'text-gray-300'}`}>{step.label}</span>
+                                  {i < 2 && <div className={`w-4 h-[1px] ${isActive ? 'bg-emerald-900' : 'bg-gray-100'} hidden lg:block`} />}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                          {/* Items List */}
+                          <div className="p-8 border-b md:border-b-0 md:border-r border-brand-border">
+                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Items</span>
+                            <div className="space-y-4">
+                              {order.items.map((item: any, idx: number) => (
+                                <div key={idx} className="flex justify-between items-center text-sm italic">
+                                  <span className="opacity-60">{item.name} ({item.size}) x {item.quantity}</span>
+                                  <span className="font-serif">LKR {(item.price * item.quantity).toLocaleString()}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Payment Receipt Upload */}
+                          <div className="p-8 border-b md:border-b-0 md:border-r border-brand-border bg-emerald-900/5">
+                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Payment Receipt</span>
+                            {order.paymentReceipt ? (
+                              <div className="py-4">
+                                <div className="flex items-center gap-3 text-emerald-800 mb-2">
+                                  <Check className="w-4 h-4" />
+                                  <span className="text-sm font-medium">Receipt Uploaded</span>
+                                </div>
+                                <p className="text-xs text-gray-500 font-light">Ref: {order.paymentReceipt}</p>
+                              </div>
+                            ) : (
+                              <div className="space-y-4">
+                                <p className="text-xs text-emerald-900/60 leading-relaxed italic">
+                                  Please transfer to our bank account and upload your transaction reference or receipt image link below.
+                                </p>
+                                <textarea 
+                                  placeholder="Transaction Reference or Receipt Link"
+                                  className="w-full p-3 text-sm bg-white border border-emerald-900/20 focus:outline-none focus:border-emerald-800 transition-all italic h-20 resize-none"
+                                  onBlur={(e) => {
+                                    if (e.target.value) uploadReceipt(order, e.target.value);
+                                  }}
+                                />
+                                <button className="w-full py-3 bg-emerald-900 text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-950 transition-all">
+                                  <CloudUpload className="w-4 h-4" /> Upload Receipt
+                                </button>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Contact Info */}
+                          <div className="p-8">
+                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Delivery Details</span>
+                            <div className="space-y-2 italic text-sm text-gray-600">
+                              <p className="font-medium text-black not-italic">{order.contactInfo?.name}</p>
+                              <p>{order.contactInfo?.phone}</p>
+                              <p className="leading-relaxed">{order.contactInfo?.address}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
 
@@ -724,43 +981,45 @@ export default function App() {
                         </button>
                       </div>
                     ) : (
-                      cart.map((item) => (
-                        <div key={`${item.id}-${item.size}`} className="flex gap-6 group border-b border-brand-border pb-6">
-                          <div className="w-20 h-24 bg-gray-50 flex-shrink-0">
-                            <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale-[20%]" referrerPolicy="no-referrer" />
-                          </div>
+                      <div className="space-y-8">
+                        {cart.map((item) => (
+                          <div key={`${item.id}-${item.size}-${item.isSubscription}-${item.frequency}`} className="flex gap-6 group border-b border-brand-border pb-6">
+                            <div className="w-20 h-24 bg-gray-50 flex-shrink-0">
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale-[20%]" referrerPolicy="no-referrer" />
+                            </div>
                             <div className="flex-1">
-                        <div className="flex justify-between items-start mb-1">
-                          <h4 className="font-serif italic text-xl">
-                            {item.name}
-                            {item.isSubscription && <span className="text-[9px] uppercase tracking-widest font-bold text-emerald-800 ml-2">({item.frequency} Day Cycle)</span>}
-                          </h4>
-                          <button 
-                            onClick={() => updateQuantity(item.id, item.size, -item.quantity, item.isSubscription, item.frequency)}
-                            className="p-1 opacity-0 group-hover:opacity-100 hover:text-red-800 transition-all"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <p className="text-[10px] uppercase tracking-widest text-emerald-800 font-bold mb-4">
-                          {item.size} — LKR {item.price.toLocaleString()} {item.isSubscription && <span className="text-emerald-900/40">- 10% Off</span>}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-sm font-medium">
-                            <button onClick={() => updateQuantity(item.id, item.size, -1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">—</button>
-                            <span>{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, item.size, 1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">+</button>
+                              <div className="flex justify-between items-start mb-1">
+                                <h4 className="font-serif italic text-xl">
+                                  {item.name}
+                                  {item.isSubscription && <span className="text-[9px] uppercase tracking-widest font-bold text-emerald-800 ml-2">({item.frequency} Day Cycle)</span>}
+                                </h4>
+                                <button 
+                                  onClick={() => updateQuantity(item.id, item.size, -item.quantity, item.isSubscription, item.frequency)}
+                                  className="p-1 opacity-0 group-hover:opacity-100 hover:text-red-800 transition-all"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                              <p className="text-[10px] uppercase tracking-widest text-emerald-800 font-bold mb-4">
+                                {item.size} — LKR {item.price.toLocaleString()} {item.isSubscription && <span className="text-emerald-900/40">- 10% Off</span>}
+                              </p>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4 text-sm font-medium">
+                                  <button onClick={() => updateQuantity(item.id, item.size, -1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">—</button>
+                                  <span>{item.quantity}</span>
+                                  <button onClick={() => updateQuantity(item.id, item.size, 1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">+</button>
+                                </div>
+                                <span className="font-serif italic">
+                                  LKR {((item.isSubscription ? item.price * 0.9 : item.price) * item.quantity).toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <span className="font-serif italic">
-                            LKR {( (item.isSubscription ? item.price * 0.9 : item.price) * item.quantity).toLocaleString()}
-                          </span>
-                        </div>
+                        ))}
                       </div>
-                        </div>
-                      ))
                     )}
                   </div>
-                ) : (
+                ) : checkoutStep === 'info' ? (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
                     <div className="space-y-6">
                       <div className="group">
@@ -806,35 +1065,118 @@ export default function App() {
                         </div>
                       ))}
                     </div>
+                  </motion.div>
+                ) : checkoutStep === 'payment' ? (
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+                    <div className="p-8 bg-emerald-900/5 border border-emerald-900/10 rounded-[2rem]">
+                      <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-900 block mb-6">Bank Transfer Details</span>
+                      <div className="space-y-4 font-serif italic text-lg leading-relaxed">
+                        <div className="flex justify-between border-b border-emerald-900/10 pb-2">
+                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Bank</span>
+                          <span>Commercial Bank</span>
+                        </div>
+                        <div className="flex justify-between border-b border-emerald-900/10 pb-2">
+                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Name</span>
+                          <span>Haloa Pet Care (PVT) LTD</span>
+                        </div>
+                        <div className="flex justify-between border-b border-emerald-900/10 pb-2">
+                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Account</span>
+                          <span>1000 4567 8901</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Branch</span>
+                          <span>Colombo 07</span>
+                        </div>
+                      </div>
+                    </div>
 
+                    <div className="space-y-6">
+                      <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 block mb-4">Quick Pay via App</span>
+                      <div className="grid grid-cols-2 gap-4">
+                        {[
+                          { name: 'ComBank Digital', color: 'bg-[#005cbb]', url: 'https://www.combankdigital.com' },
+                          { name: 'Sampath Vishwa', color: 'bg-[#f47b20]', url: 'https://www.sampathvishwa.com' },
+                          { name: 'NTB Flash', color: 'bg-black', url: 'https://www.nationstrust.com/personal/digital-banking/flash' },
+                          { name: 'HNB Solo', color: 'bg-[#0054a6]', url: 'https://www.hnb.net/solo' }
+                        ].map(bank => (
+                          <a 
+                            key={bank.name} 
+                            href={bank.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 p-3 border border-brand-border hover:border-emerald-900 transition-all rounded-xl grayscale hover:grayscale-0"
+                          >
+                            <div className={`w-8 h-8 ${bank.color} rounded-lg flex items-center justify-center text-white text-[8px] font-bold text-center leading-tight`}>
+                              {bank.name.split(' ')[0]}
+                            </div>
+                            <span className="text-[10px] uppercase tracking-widest font-bold whitespace-nowrap">{bank.name}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="p-6 bg-amber-50 border border-amber-200 rounded-xl flex gap-4">
+                      <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                      <p className="text-xs text-amber-800 leading-relaxed italic font-light">
+                        After payment, please log in to your account and upload the receipt under "My Orders" to confirm your delivery.
+                      </p>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }} 
+                    animate={{ opacity: 1, scale: 1 }} 
+                    className="h-full flex flex-col items-center justify-center text-center p-8 space-y-6"
+                  >
+                    <div className="w-20 h-20 bg-emerald-900/10 rounded-full flex items-center justify-center mb-4">
+                      <Check className="w-10 h-10 text-emerald-900" />
+                    </div>
+                    <h4 className="text-4xl font-serif italic">Order Placed</h4>
+                    <p className="text-gray-500 font-light leading-relaxed">
+                      Your order <span className="font-serif italic text-black">#{lastOrderId?.slice(0, 8)}</span> has been registered. 
+                      Once we confirm your payment, your artisanal treats will be prepared.
+                    </p>
                     <button 
-                      onClick={() => setCheckoutStep('cart')}
-                      className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 flex items-center gap-2"
+                      onClick={() => {
+                        setCurrentView('dashboard');
+                        setIsCartOpen(false);
+                      }}
+                      className="px-8 py-4 bg-emerald-900 text-white text-[10px] font-bold uppercase tracking-widest flex items-center gap-4 group"
                     >
-                      <Minus className="w-3 h-3" /> Back to Bag
+                      Track Order <div className="w-6 h-[1px] bg-white group-hover:w-10 transition-all"></div>
                     </button>
                   </motion.div>
                 )}
               </div>
 
-              {cart.length > 0 ? (
+              {cart.length > 0 && checkoutStep !== 'success' && (
                 <div className="p-8 border-t border-brand-border bg-brand-bg space-y-8">
                   <div className="flex justify-between items-baseline">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30">Subtotal</span>
                     <span className="text-4xl font-serif italic">LKR {cartTotal.toLocaleString()}</span>
                   </div>
-                  <button 
-                    className="w-full py-6 bg-emerald-900 text-white font-serif italic text-xl hover:bg-emerald-950 transition-all flex items-center justify-center gap-6 group"
-                    onClick={handleCheckout}
-                  >
-                    {checkoutStep === 'cart' ? 'Continue' : 'Confirm Order'} 
-                    <div className="w-8 h-[1px] bg-white group-hover:w-16 transition-all"></div>
-                  </button>
+                  <div className="flex gap-4">
+                    {checkoutStep !== 'cart' && (
+                      <button 
+                        onClick={() => setCheckoutStep(prev => prev === 'payment' ? 'info' : 'cart')}
+                        className="p-5 border border-brand-border hover:bg-gray-50 transition-colors"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    )}
+                    <button 
+                      className="flex-1 py-6 bg-emerald-900 text-white font-serif italic text-xl hover:bg-emerald-950 transition-all flex items-center justify-center gap-6 group"
+                      onClick={handleCheckout}
+                    >
+                      {!user ? 'Sign in to Checkout' : checkoutStep === 'cart' ? 'Proceed to Details' : checkoutStep === 'info' ? 'Proceed to Payment' : 'Complete Order'}
+                      <div className="w-8 h-[1px] bg-white group-hover:w-16 transition-all"></div>
+                    </button>
+                  </div>
                   <p className="text-[9px] text-center opacity-40 uppercase tracking-[0.2em]">
                     {checkoutStep === 'cart' ? 'Sri Lanka Delivery' : 'Bank Transfer / Cash'}
                   </p>
                 </div>
-              ) : null}
+              )}
             </motion.div>
           </>
         )}
