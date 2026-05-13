@@ -97,7 +97,7 @@ const PRODUCTS: Product[] = [
     id: 'crunchy-paws',
     name: 'Crunchy Paws',
     description: 'Dehydrated chicken feet. A natural source of glucosamine and chondroitin for healthy joints.',
-    image: 'https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&q=80&w=800',
+    image: 'input_file_0.png',
     benefits: [
       { icon: Bone, text: 'Natural Glucosamine & Chondroitin for Joint Support' },
       { icon: Smile, text: 'Promotes Dental Hygiene through Chewing Action' },
@@ -127,13 +127,13 @@ const PRODUCTS: Product[] = [
         title: 'No Additives',
         description: 'Absolutely zero salt, sugar, preservatives, or artificial colors. Just 100% natural chicken feet.',
         icon: Shield,
-        image: 'https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&q=80&w=600'
+        image: 'input_file_2.png'
       }
     ],
     options: [
-      { size: '12 Pieces', price: 499, image: 'https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&q=80&w=400' },
-      { size: '20 Pieces', price: 799, image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=400' },
-      { size: '40 Pieces', price: 1699, image: 'https://images.unsplash.com/photo-1533038590840-1cde6b56f405?auto=format&fit=crop&q=80&w=400' },
+      { size: '12 Pieces', price: 499, image: 'input_file_2.png' },
+      { size: '20 Pieces', price: 799, image: 'input_file_1.png' },
+      { size: '40 Pieces', price: 1699, image: 'input_file_0.png' },
     ]
   },
   {
