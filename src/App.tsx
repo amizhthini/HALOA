@@ -579,7 +579,7 @@ export default function App() {
               onClick={() => setCurrentView('home')}
               className="hover:opacity-80 transition-opacity flex items-center py-1"
             >
-              <img src="input_file_3.png" alt="Haloa Logo" className="h-11 md:h-12 w-auto object-contain" referrerPolicy="no-referrer" />
+              <span className="text-2xl md:text-3xl font-serif tracking-[0.2em] font-bold text-emerald-900">HALOA</span>
             </button>
             <div className="hidden md:flex items-center gap-6 ml-8">
               <button 
