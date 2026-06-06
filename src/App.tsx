@@ -10,6 +10,7 @@ import {
   Plus, 
   Minus, 
   ChevronRight, 
+  ChevronLeft,
   Heart, 
   Sparkles, 
   Check, 
@@ -88,6 +89,7 @@ interface CartItem {
   price: number;
   quantity: number;
   isSubscription: boolean;
+  subscriptionType?: 'none' | 'monthly' | 'annual';
   frequency?: number;
 }
 
@@ -131,9 +133,9 @@ const PRODUCTS: Product[] = [
       }
     ],
     options: [
-      { size: '12 Pieces', price: 499, image: 'input_file_2.png' },
+      { size: '12 Pieces', price: 599, image: 'input_file_2.png' },
       { size: '20 Pieces', price: 799, image: 'input_file_1.png' },
-      { size: '40 Pieces', price: 1699, image: 'input_file_0.png' },
+      { size: '40 Pieces', price: 1990, image: 'input_file_0.png' },
     ]
   },
   {
@@ -223,15 +225,180 @@ const PRODUCTS: Product[] = [
   }
 ];
 
+// Why Subscribe Component with Interactive Graphical View
+const WhySubscribe = () => {
+  const [estimateFoodPrice, setEstimateFoodPrice] = useState(15000); // Default estimate monthly budget in LKR
+  
+  // Calculate yearly costs:
+  // Assume 12 orders a year
+  // One-off delivery estimate: LKR 800 per delivery
+  const deliveryCostPerOrder = 800;
+  const yearlyOneOff = (estimateFoodPrice * 12) + (deliveryCostPerOrder * 12);
+  const yearlyMonthly = (estimateFoodPrice * 0.95 * 12);
+  const yearlyAnnual = (estimateFoodPrice * 0.90 * 12);
+
+  const maxVal = Math.max(yearlyOneOff, yearlyMonthly, yearlyAnnual);
+
+  return (
+    <section className="bg-brand-bg border-t border-brand-border p-8 md:p-16 lg:p-24">
+      <div className="max-w-6xl mx-auto">
+        <span className="text-sm uppercase tracking-[0.25em] font-extrabold text-emerald-800 block mb-4 text-center md:text-left">Membership Perks</span>
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif italic mb-12 text-center md:text-left">Why Subscribe to Haloa?</h2>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          {/* Left Column: Key subscription benefits */}
+          <div className="lg:col-span-6 space-y-10">
+            <p className="text-xl text-gray-700 font-normal leading-relaxed">
+              Our subscription service is designed to keep your pet's bowl filled with freshly prepared, preservative-free meals on autopilot, while being kinder to your wallet.
+            </p>
+            
+            <div className="space-y-8">
+              {[
+                { 
+                  title: 'Consistent Freshness & Zero Additives', 
+                  desc: 'Every subscription cycle guarantees priority preparation. Meals are cooked in small, artisanal batches and shipped direct, ensuring continuous nutritional integrity.' 
+                },
+                { 
+                  title: '100% Free Delivery, No Exceptions', 
+                  desc: 'Whether you choose a monthly or annual subscription, and no matter your shipping interval (20d, 45d, or 60d), delivery is completely free.' 
+                },
+                { 
+                  title: 'Flexible & Pauseable Cycles', 
+                  desc: 'Going away or have extra food left? Easily pause, modify intervals, or cancel your subscription at any time directly from your dashboard with zero fees.' 
+                },
+                { 
+                  title: 'Exclusive Member Privileges', 
+                  desc: 'Annual subscribers automatically unlock the Pawsome Cycle, which includes priority batch allocations, custom birthday treats, and first access to seasonal recipes.' 
+                }
+              ].map((benefit, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="w-8 h-8 rounded-full bg-emerald-900/10 text-emerald-900 flex items-center justify-center font-serif italic text-sm font-extrabold mt-1 shrink-0">
+                    {i + 1}
+                  </div>
+                  <div>
+                    <h4 className="font-serif italic text-xl text-emerald-950 mb-1.5 font-semibold">{benefit.title}</h4>
+                    <p className="text-base text-gray-600 font-light leading-relaxed">{benefit.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Right Column: Comparative Interactive Graph */}
+          <div className="lg:col-span-6 bg-white border border-brand-border p-8 md:p-10 rounded-[2rem] shadow-md space-y-8">
+            <div>
+              <span className="text-xs uppercase tracking-widest font-extrabold text-emerald-800 block mb-2">Estimate Your Savings</span>
+              <h3 className="text-3xl font-serif italic text-emerald-950">Yearly Value Calculator</h3>
+            </div>
+            
+            {/* Input Slider for Monthly Budget */}
+            <div className="space-y-4">
+              <div className="flex justify-between text-base font-semibold">
+                <span className="text-gray-600">Monthly Pet Food Expense:</span>
+                <span className="font-serif font-bold text-emerald-900 text-lg">LKR {estimateFoodPrice.toLocaleString()}</span>
+              </div>
+              <input 
+                type="range" 
+                min="5000" 
+                max="50000" 
+                step="2500" 
+                value={estimateFoodPrice} 
+                onChange={(e) => setEstimateFoodPrice(Number(e.target.value))}
+                className="w-full accent-emerald-900 h-1.5 bg-emerald-900/10 rounded-lg cursor-pointer"
+              />
+              <div className="flex justify-between text-xs text-gray-500 uppercase tracking-wider font-bold">
+                <span>5,000 LKR</span>
+                <span>25,000 LKR</span>
+                <span>50,000 LKR</span>
+              </div>
+            </div>
+
+            {/* Graphical Visualization Bars */}
+            <div className="space-y-6 pt-6 border-t border-brand-border">
+              {/* One-off Bar */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm font-semibold">
+                  <span className="text-gray-600">One-off Orders (12 Months)</span>
+                  <span className="text-gray-800 font-bold">LKR {yearlyOneOff.toLocaleString()}</span>
+                </div>
+                <div className="relative h-8 bg-gray-100 rounded-md overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(yearlyOneOff / maxVal) * 100}%` }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute top-0 left-0 bottom-0 bg-gray-300 rounded-md flex items-center pl-3"
+                  >
+                    <span className="text-xs uppercase tracking-wider font-bold text-gray-750">Standard Price + Shipping</span>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Monthly Sub Bar */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm font-semibold">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-emerald-900 font-bold font-serif italic">Monthly Subscription</span>
+                    <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded uppercase font-extrabold tracking-wider">Save 5% & Free Delivery</span>
+                  </div>
+                  <span className="text-emerald-900 font-bold">LKR {yearlyMonthly.toLocaleString()}</span>
+                </div>
+                <div className="relative h-8 bg-emerald-900/5 rounded-md overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(yearlyMonthly / maxVal) * 100}%` }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute top-0 left-0 bottom-0 bg-emerald-800/20 rounded-md flex items-center justify-between px-3"
+                  >
+                    <span className="text-xs uppercase tracking-wider font-extrabold text-emerald-950">Reduced Cost</span>
+                    <span className="text-xs font-serif italic font-bold text-emerald-950">Saved LKR {(yearlyOneOff - yearlyMonthly).toLocaleString()}</span>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Annual Sub Bar */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm font-semibold">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-emerald-950 font-bold font-serif italic">Annual Pawsome Cycle</span>
+                    <span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded uppercase font-extrabold tracking-wider">Save 10% & Free Delivery</span>
+                  </div>
+                  <span className="text-emerald-950 font-bold text-base">LKR {yearlyAnnual.toLocaleString()}</span>
+                </div>
+                <div className="relative h-8 bg-emerald-900/10 rounded-md overflow-hidden border border-emerald-900/20">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(yearlyAnnual / maxVal) * 100}%` }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute top-0 left-0 bottom-0 bg-emerald-900 rounded-md flex items-center justify-between px-3"
+                  >
+                    <span className="text-xs uppercase tracking-wider font-extrabold text-emerald-100 animate-pulse">Best Value Plan</span>
+                    <span className="text-xs font-serif italic font-bold text-emerald-200">Saved LKR {(yearlyOneOff - yearlyAnnual).toLocaleString()}</span>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+
+            {/* Subtle disclaimer */}
+            <p className="text-xs text-gray-500 font-normal italic leading-relaxed text-center">
+              *Calculated based on estimated average pet feeding cycles consisting of 12 orders per year with an estimated local shipping charge of LKR 800 per shipment. Subscriptions enjoy free delivery on all shipments no matter the intervals (20d, 45d, 60d).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'products' | 'dashboard'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'products' | 'subscribe' | 'dashboard'>('home');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<Record<string, number>>({
     'crunchy-paws': 0
   });
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const [subFrequency, setSubFrequency] = useState(30);
+  const [subscriptionType, setSubscriptionType] = useState<'none' | 'monthly' | 'annual'>('none');
+  const isSubscribing = subscriptionType !== 'none';
+  const [subFrequency, setSubFrequency] = useState(20);
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
 
   // Firebase Auth & Database State
@@ -263,22 +430,14 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (currentView === 'home') {
-        setActiveHeroIdx(prev => (prev + 1) % PRODUCTS.length);
-      }
-    }, 8000);
-    return () => clearInterval(timer);
-  }, [currentView]);
-
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'info' | 'payment' | 'success'>('cart');
   const [contactInfo, setContactInfo] = useState({ name: '', phone: '', address: '' });
   const [lastOrderId, setLastOrderId] = useState<string | null>(null);
 
   const cartTotal = useMemo(() => 
     cart.reduce((sum, item) => {
-      const price = item.isSubscription ? item.price * 0.9 : item.price;
+      const discount = item.subscriptionType === 'annual' ? 0.90 : item.subscriptionType === 'monthly' ? 0.95 : 1.0;
+      const price = Math.round(item.price * discount);
       return sum + (price * item.quantity);
     }, 0),
   [cart]);
@@ -291,12 +450,13 @@ export default function App() {
       item.id === product.id && 
       item.size === option.size && 
       item.isSubscription === isSubscribing &&
+      (!isSubscribing || item.subscriptionType === subscriptionType) &&
       (!isSubscribing || item.frequency === subFrequency)
     );
     
     if (existingItem) {
       setCart(cart.map(item => 
-        (item.id === product.id && item.size === option.size && item.isSubscription === isSubscribing && (!isSubscribing || item.frequency === subFrequency))
+        (item.id === product.id && item.size === option.size && item.isSubscription === isSubscribing && (!isSubscribing || item.subscriptionType === subscriptionType) && (!isSubscribing || item.frequency === subFrequency))
           ? { ...item, quantity: item.quantity + 1 }
           : item
       ));
@@ -309,6 +469,7 @@ export default function App() {
         price: option.price,
         quantity: 1,
         isSubscription: isSubscribing,
+        subscriptionType: subscriptionType,
         frequency: isSubscribing ? subFrequency : undefined
       }]);
     }
@@ -400,12 +561,12 @@ export default function App() {
     <div className="min-h-screen bg-brand-bg text-[#1a1a1a] flex selection:bg-emerald-100">
       {/* Left Sidebar - Brand Identity */}
       <aside className="fixed left-0 top-0 bottom-0 w-16 border-r border-brand-border hidden lg:flex flex-col items-center py-12 justify-between z-40 bg-brand-bg">
-        <div className="[writing-mode:vertical-rl] rotate-180 text-[10px] tracking-[0.3em] font-medium text-gray-400 uppercase">
+        <div className="[writing-mode:vertical-rl] rotate-180 text-xs tracking-[0.3em] font-semibold text-gray-500 uppercase">
           Artisanal Pet Nutrition
         </div>
         <div className="h-24 w-[1px] bg-brand-border"></div>
-        <div className="[writing-mode:vertical-rl] rotate-180 text-[10px] tracking-[0.3em] font-medium text-gray-400 uppercase">
-          Est. 2024
+        <div className="[writing-mode:vertical-rl] rotate-180 text-xs tracking-[0.3em] font-semibold text-gray-500 uppercase">
+          Est. 2025
         </div>
       </aside>
 
@@ -416,22 +577,28 @@ export default function App() {
           <div className="flex items-center gap-6">
             <button 
               onClick={() => setCurrentView('home')}
-              className="text-3xl font-serif tracking-tight font-light hover:opacity-70 transition-opacity"
+              className="hover:opacity-80 transition-opacity flex items-center py-1"
             >
-              Haloa
+              <img src="input_file_3.png" alt="Haloa Logo" className="h-11 md:h-12 w-auto object-contain" referrerPolicy="no-referrer" />
             </button>
             <div className="hidden md:flex items-center gap-6 ml-8">
               <button 
                 onClick={() => setCurrentView('home')}
-                className={`text-[10px] tracking-[0.2em] uppercase font-bold transition-colors ${currentView === 'home' ? 'text-emerald-900 border-b-2 border-emerald-900' : 'text-gray-400 hover:text-emerald-800'}`}
+                className={`text-xs md:text-sm tracking-[0.15em] uppercase font-extrabold transition-colors pb-1 ${currentView === 'home' ? 'text-emerald-900 border-b-2 border-emerald-900' : 'text-gray-500 hover:text-emerald-800'}`}
               >
                 Home
               </button>
               <button 
                 onClick={() => setCurrentView('products')}
-                className={`text-[10px] tracking-[0.2em] uppercase font-bold transition-colors ${currentView === 'products' ? 'text-emerald-900 border-b-2 border-emerald-900' : 'text-gray-400 hover:text-emerald-800'}`}
+                className={`text-xs md:text-sm tracking-[0.15em] uppercase font-extrabold transition-colors pb-1 ${currentView === 'products' ? 'text-emerald-900 border-b-2 border-emerald-900' : 'text-gray-400 hover:text-emerald-800'}`}
               >
                 Our Products
+              </button>
+              <button 
+                onClick={() => setCurrentView('subscribe')}
+                className={`text-xs md:text-sm tracking-[0.15em] uppercase font-extrabold transition-colors pb-1 ${currentView === 'subscribe' ? 'text-emerald-900 border-b-2 border-emerald-900' : 'text-gray-500 hover:text-emerald-800'}`}
+              >
+                Why Subscribe?
               </button>
             </div>
           </div>
@@ -441,23 +608,23 @@ export default function App() {
               <div className="flex items-center gap-4">
                 <button 
                   onClick={() => setCurrentView('dashboard')}
-                  className={`text-[10px] tracking-[0.2em] uppercase font-bold transition-colors flex items-center gap-2 ${currentView === 'dashboard' ? 'text-emerald-900' : 'text-gray-400 hover:text-emerald-800'}`}
+                  className={`text-xs md:text-sm tracking-[0.15em] uppercase font-extrabold transition-colors flex items-center gap-2 ${currentView === 'dashboard' ? 'text-emerald-900' : 'text-gray-500 hover:text-emerald-800'}`}
                 >
                   <History className="w-4 h-4" /> My Orders
                 </button>
                 <div className="h-4 w-[1px] bg-brand-border"></div>
                 <button 
                   onClick={logOut}
-                  className="text-[10px] tracking-[0.2em] uppercase font-bold text-gray-400 hover:text-red-800 transition-colors"
+                  className="text-xs md:text-sm tracking-[0.15em] uppercase font-extrabold text-gray-500 hover:text-red-800 transition-colors"
                 >
                   Logout
                 </button>
-                <img src={user.photoURL || ''} alt="" className="w-8 h-8 rounded-full border border-brand-border" referrerPolicy="no-referrer" />
+                <img src={user.photoURL || ''} alt="" className="w-9 h-9 rounded-full border border-brand-border" referrerPolicy="no-referrer" />
               </div>
             ) : (
               <button 
                 onClick={() => signInWithGoogle()}
-                className="text-[10px] tracking-[0.2em] uppercase font-bold text-emerald-900 border border-emerald-900 px-4 py-2 hover:bg-emerald-900 hover:text-white transition-all"
+                className="text-xs md:text-sm tracking-[0.15em] uppercase font-extrabold text-emerald-900 border border-emerald-900 px-5 py-2.5 hover:bg-emerald-900 hover:text-white transition-all rounded-lg"
               >
                 Sign In
               </button>
@@ -468,7 +635,7 @@ export default function App() {
             >
               <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform" />
               {cart.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-emerald-900 text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                <span className="absolute -top-1.5 -right-1.5 bg-emerald-900 text-white text-[11px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-sm">
                   {cart.reduce((a, b) => a + b.quantity, 0)}
                 </span>
               )}
@@ -496,9 +663,9 @@ export default function App() {
                       transition={{ duration: 0.5 }}
                       className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center"
                     >
-                      <div className="lg:col-span-7">
+                      <div className="lg:col-span-6">
                         <div className="flex items-center gap-4 mb-4">
-                          <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-emerald-800">Featured Nutrition</span>
+                          <span className="text-xs md:text-sm uppercase tracking-[0.2em] font-extrabold text-emerald-800">Featured Nutrition</span>
                           <div className="h-[1px] w-12 bg-emerald-800/30"></div>
                         </div>
                         <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif leading-[0.85] mb-8 italic">
@@ -511,98 +678,145 @@ export default function App() {
                         
                         {/* Subscription & Frequency Selector */}
                         <div className="mb-10 space-y-4">
-                          <div className="flex items-center gap-4 bg-emerald-900/5 p-4 rounded-xl max-w-sm border border-emerald-900/10">
-                            <button 
-                              onClick={() => setIsSubscribing(!isSubscribing)}
-                              className={`w-12 h-6 rounded-full transition-colors relative ${isSubscribing ? 'bg-emerald-800' : 'bg-gray-200'}`}
-                            >
-                              <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${isSubscribing ? 'left-7' : 'left-1'}`}></div>
-                            </button>
-                            <div className="flex flex-col">
-                              <span className="text-[10px] uppercase tracking-widest font-bold">Subscribe & Save 10%</span>
-                              <span className="text-[9px] text-emerald-800 opacity-60">Custom delivery intervals</span>
-                            </div>
+                          <span className="text-xs md:text-sm uppercase tracking-widest font-extrabold text-emerald-850">Select Purchase Plan</span>
+                          <div className="grid grid-cols-3 gap-2 bg-emerald-900/5 p-1 rounded-xl max-w-md border border-emerald-900/10">
+                            {[
+                              { id: 'none', label: 'One-off', discount: 'Regular' },
+                              { id: 'monthly', label: 'Monthly', discount: 'Save 5%', delivery: 'Free Delivery' },
+                              { id: 'annual', label: 'Annual', discount: 'Save 10%', delivery: 'Free Delivery' }
+                            ].map((plan) => (
+                              <button
+                                key={plan.id}
+                                onClick={() => setSubscriptionType(plan.id as 'none' | 'monthly' | 'annual')}
+                                className={`py-3 px-2 rounded-lg flex flex-col items-center justify-center transition-all ${
+                                  subscriptionType === plan.id 
+                                    ? 'bg-emerald-900 text-white shadow-md' 
+                                    : 'text-gray-500 hover:text-emerald-900 hover:bg-white/50'
+                                }`}
+                              >
+                                <span className={`font-bold uppercase tracking-wider ${
+                                  subscriptionType === plan.id ? 'text-white text-sm' : 'text-gray-655 text-xs'
+                                }`}>{plan.label}</span>
+                                <span className={`font-serif font-bold mt-1 tracking-wide ${
+                                  subscriptionType === plan.id ? 'text-emerald-200 text-sm' : 'text-emerald-900 text-sm'
+                                }`}>
+                                  {plan.discount}
+                                </span>
+                                {plan.delivery && (
+                                  <span className={`font-extrabold uppercase mt-0.5 tracking-wider ${
+                                    subscriptionType === plan.id ? 'text-emerald-100 text-[11px]' : 'text-emerald-800/80 text-[11px]'
+                                  }`}>
+                                    {plan.delivery}
+                                  </span>
+                                )}
+                              </button>
+                            ))}
                           </div>
 
-                          {isSubscribing && (
+                          {subscriptionType !== 'none' && (
                             <motion.div 
-                              initial={{ opacity: 0, y: -10 }}
+                              initial={{ opacity: 0, y: -5 }}
                               animate={{ opacity: 1, y: 0 }}
-                              className="flex gap-2 p-2 bg-white border border-brand-border rounded-lg max-w-xs"
+                              className="flex items-center gap-3 bg-white p-3 rounded-lg border border-brand-border max-w-sm"
                             >
-                              {[30, 45, 60].map(days => (
-                                <button
-                                  key={days}
-                                  onClick={() => setSubFrequency(days)}
-                                  className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded ${
-                                    subFrequency === days ? 'bg-emerald-900 text-white' : 'text-gray-400 hover:bg-gray-50'
-                                  }`}
-                                >
-                                  {days} Days
-                                </button>
-                              ))}
+                              <span className="text-xs md:text-sm uppercase tracking-widest font-bold text-gray-500">Interval:</span>
+                              <div className="flex gap-1.5">
+                                {[20, 45, 60].map(days => (
+                                  <button
+                                    key={days}
+                                    onClick={() => setSubFrequency(days)}
+                                    className={`py-1.5 px-3 text-xs font-bold uppercase tracking-widest transition-all rounded ${
+                                      subFrequency === days ? 'bg-emerald-800 text-white' : 'text-gray-455 hover:bg-gray-50'
+                                    }`}
+                                  >
+                                    {days} Days
+                                  </button>
+                                ))}
+                              </div>
                             </motion.div>
                           )}
                         </div>
 
                         {/* Product Size Selectors */}
                         <div className="flex flex-wrap gap-4 mb-16">
-                          {PRODUCTS[activeHeroIdx].options.map((opt, idx) => (
-                            <button
-                              key={opt.size}
-                              onClick={() => setSelectedSizes(prev => ({ ...prev, [PRODUCTS[activeHeroIdx].id]: idx }))}
-                              className={`flex flex-col p-6 w-40 transition-all border group relative overflow-hidden ${
-                                selectedSizes[PRODUCTS[activeHeroIdx].id] === idx
-                                  ? 'bg-emerald-900 border-emerald-900 text-white shadow-2xl scale-105 z-10'
-                                  : 'bg-white border-brand-border text-gray-400 hover:border-emerald-900/30'
-                              }`}
-                            >
-                              {opt.image && (
-                                <div className="absolute -right-4 -top-4 w-20 h-20 opacity-20 group-hover:opacity-40 transition-opacity">
-                                  <img src={opt.image} alt="" className="w-full h-full object-cover rounded-full" />
-                                </div>
-                              )}
-                              <span className={`text-[10px] uppercase tracking-widest mb-2 relative z-10 ${
-                                selectedSizes[PRODUCTS[activeHeroIdx].id] === idx ? 'text-emerald-200' : 'text-gray-400'
-                              }`}>
-                                {idx === 0 ? 'Starter' : idx === 1 ? 'Value' : 'Premium'}
-                              </span>
-                              <span className="text-2xl font-serif mb-1 relative z-10 whitespace-nowrap">{opt.size}</span>
-                              <div className="flex items-center gap-2 relative z-10">
-                                {isSubscribing && (
-                                  <span className="text-xs line-through opacity-40">LKR {opt.price.toLocaleString()}</span>
+                          {PRODUCTS[activeHeroIdx].options.map((opt, idx) => {
+                            const discount = subscriptionType === 'annual' ? 0.90 : subscriptionType === 'monthly' ? 0.95 : 1.0;
+                            const finalPrice = Math.round(opt.price * discount);
+                            return (
+                              <button
+                                key={opt.size}
+                                onClick={() => setSelectedSizes(prev => ({ ...prev, [PRODUCTS[activeHeroIdx].id]: idx }))}
+                                className={`flex flex-col p-6 w-40 transition-all border group relative overflow-hidden ${
+                                  selectedSizes[PRODUCTS[activeHeroIdx].id] === idx
+                                    ? 'bg-emerald-900 border-emerald-900 text-white shadow-2xl scale-105 z-10'
+                                    : 'bg-white border-brand-border text-gray-400 hover:border-emerald-900/30'
+                                }`}
+                              >
+                                {opt.image && (
+                                  <div className="absolute -right-4 -top-4 w-20 h-20 opacity-20 group-hover:opacity-40 transition-opacity">
+                                    <img src={opt.image} alt="" className="w-full h-full object-cover rounded-full" />
+                                  </div>
                                 )}
-                                <span className={`font-medium ${
-                                  selectedSizes[PRODUCTS[activeHeroIdx].id] === idx ? 'text-white' : 'text-emerald-800'
+                                <span className={`text-xs uppercase tracking-widest mb-2 relative z-10 font-bold ${
+                                  selectedSizes[PRODUCTS[activeHeroIdx].id] === idx ? 'text-emerald-200' : 'text-gray-400'
                                 }`}>
-                                  LKR {(isSubscribing ? opt.price * 0.9 : opt.price).toLocaleString()}
+                                  {idx === 0 ? 'Starter' : idx === 1 ? 'Value' : 'Premium'}
                                 </span>
-                              </div>
-                            </button>
-                          ))}
+                                <span className="text-2xl font-serif mb-1 relative z-10 whitespace-nowrap">{opt.size}</span>
+                                <div className="flex items-center gap-2 relative z-10 font-sans">
+                                  {subscriptionType !== 'none' && (
+                                    <span className="text-xs line-through opacity-40">LKR {opt.price.toLocaleString()}</span>
+                                  )}
+                                  <span className={`font-medium ${
+                                    selectedSizes[PRODUCTS[activeHeroIdx].id] === idx ? 'text-white' : 'text-emerald-800'
+                                  }`}>
+                                    LKR {finalPrice.toLocaleString()}
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
 
-                        <div className="flex items-center gap-6">
+                        <div className="flex flex-wrap items-center gap-6">
                           <button 
                             onClick={() => addToCart(PRODUCTS[activeHeroIdx], selectedSizes[PRODUCTS[activeHeroIdx].id] || 0)}
                             className="px-12 py-5 bg-emerald-900 text-white font-serif italic text-xl hover:bg-emerald-950 transition-all flex items-center gap-4 group"
                           >
-                            {isSubscribing ? 'Start Monthly Cycle' : 'Add to Delivery'} <div className="w-8 h-[1px] bg-white group-hover:w-12 transition-all"></div>
+                            {subscriptionType === 'annual' ? 'Start Pawsome Cycle' : subscriptionType === 'monthly' ? 'Start Monthly Cycle' : 'Add to Delivery'} <div className="w-8 h-[1px] bg-white group-hover:w-12 transition-all"></div>
                           </button>
                           
-                          <div className="flex gap-2">
-                            {PRODUCTS.map((_, i) => (
-                              <button 
-                                key={i}
-                                onClick={() => setActiveHeroIdx(i)}
-                                className={`w-2 h-2 rounded-full transition-all ${activeHeroIdx === i ? 'bg-emerald-900 w-8' : 'bg-emerald-200'}`}
-                              />
-                            ))}
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => setActiveHeroIdx(i => (i - 1 + PRODUCTS.length) % PRODUCTS.length)}
+                              className="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-emerald-900 hover:bg-emerald-900/5 transition-all"
+                              aria-label="Previous product"
+                            >
+                              <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            
+                            <div className="flex gap-2">
+                              {PRODUCTS.map((_, i) => (
+                                <button 
+                                  key={i}
+                                  onClick={() => setActiveHeroIdx(i)}
+                                  className={`w-2 h-2 rounded-full transition-all ${activeHeroIdx === i ? 'bg-emerald-900 w-8' : 'bg-emerald-200'}`}
+                                />
+                              ))}
+                            </div>
+
+                            <button
+                              onClick={() => setActiveHeroIdx(i => (i + 1) % PRODUCTS.length)}
+                              className="w-10 h-10 rounded-full border border-brand-border flex items-center justify-center text-emerald-900 hover:bg-emerald-900/5 transition-all"
+                              aria-label="Next product"
+                            >
+                              <ChevronRight className="w-5 h-5" />
+                            </button>
                           </div>
                         </div>
                       </div>
 
-                      <div className="lg:col-span-5 relative">
+                      <div className="lg:col-span-6 relative">
                         <div className="aspect-[4/5] bg-emerald-900/5 rounded-t-[10rem] overflow-hidden border border-brand-border relative">
                           <AnimatePresence mode="wait">
                             <motion.img 
@@ -628,7 +842,7 @@ export default function App() {
               {/* Benefits Section */}
               <section className="bg-white border-t border-brand-border p-8 md:p-16 lg:p-24">
                 <div className="max-w-6xl mx-auto">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 block mb-16 text-center">Beyond the Crunch</span>
+                  <span className="text-sm uppercase tracking-[0.2em] font-extrabold text-gray-500 block mb-16 text-center">Beyond the Crunch</span>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     {PRODUCTS[activeHeroIdx].benefits.map((benefit, i) => (
                       <div key={i} className="flex flex-col items-center text-center group">
@@ -655,21 +869,21 @@ export default function App() {
                             className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" 
                           />
                           <div className="absolute inset-0 bg-emerald-950/20 group-hover:bg-transparent transition-colors"></div>
-                          <div className="absolute top-6 left-6 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-[10px] font-bold tracking-widest text-emerald-900 border border-emerald-900/10">
+                          <div className="absolute top-6 left-6 w-12 h-12 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center text-xs font-bold tracking-widest text-emerald-900 border border-emerald-900/20 shadow-sm">
                             {item.step}
                           </div>
                         </div>
                         <div className="p-10 flex flex-col flex-1">
                           <div className="flex items-center gap-3 mb-6">
-                            <item.icon className="w-4 h-4 text-emerald-800/40" />
-                            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-800/40">{item.label}</span>
+                            <item.icon className="w-4 h-4 text-emerald-800/60" />
+                            <span className="text-xs uppercase tracking-[0.2em] font-extrabold text-emerald-800/60">{item.label}</span>
                           </div>
                           <h4 className="text-3xl font-serif italic mb-4">{item.title}</h4>
-                          <p className="text-sm text-gray-500 font-light leading-relaxed mb-8">
+                          <p className="text-base text-gray-600 font-light leading-relaxed mb-8">
                             {item.description}
                           </p>
                           <div className="mt-auto pt-8 border-t border-brand-border/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[9px] uppercase tracking-widest font-bold text-emerald-800">Learn about our standards →</span>
+                            <span className="text-xs uppercase tracking-widest font-bold text-emerald-800">Learn about our standards →</span>
                           </div>
                         </div>
                       </div>
@@ -677,6 +891,7 @@ export default function App() {
                   </div>
                 </div>
               </section>
+              <WhySubscribe />
             </motion.div>
           ) : currentView === 'products' ? (
             <motion.div
@@ -688,14 +903,14 @@ export default function App() {
             >
               <div className="max-w-6xl mx-auto">
                 <header className="mb-20">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 block mb-4">Our Collection</span>
+                  <span className="text-sm uppercase tracking-[0.25em] font-extrabold text-gray-500 block mb-4">Our Collection</span>
                   <h2 className="text-6xl font-serif italic">Artisanal Selection</h2>
                 </header>
 
                 <div className="space-y-32">
                   {PRODUCTS.map((product) => (
                     <div key={product.id} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                      <div className="lg:col-span-5 relative">
+                      <div className="lg:col-span-6 relative">
                         <div className="aspect-[4/5] bg-brand-bg border border-brand-border overflow-hidden relative shadow-sm">
                           <img 
                             src={product.image} 
@@ -705,85 +920,122 @@ export default function App() {
                           />
                         </div>
                       </div>
-                      <div className="lg:col-span-7">
+                      <div className="lg:col-span-6">
                         <h3 className="text-5xl font-serif mb-6 italic">{product.name}</h3>
                         <p className="text-xl text-gray-500 font-light mb-10 leading-relaxed max-w-lg">{product.description}</p>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                           <div className="space-y-4">
-                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800">Key Benefits</span>
+                            <span className="text-xs uppercase tracking-widest font-extrabold text-emerald-800">Key Benefits</span>
                             <ul className="space-y-3">
                               {product.benefits.map((benefit, i) => (
-                                <li key={i} className="flex items-start gap-3 text-sm font-light text-gray-600">
-                                  <benefit.icon className="w-4 h-4 text-emerald-800 mt-0.5 flex-shrink-0" />
+                                <li key={i} className="flex items-start gap-4 text-base font-normal text-gray-600">
+                                  <benefit.icon className="w-4 h-4 text-emerald-800 mt-1 flex-shrink-0" />
                                   {benefit.text}
                                 </li>
                               ))}
                             </ul>
                           </div>
                           <div className="space-y-4">
-                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800">Select & Add</span>
+                            <span className="text-xs uppercase tracking-widest font-extrabold text-emerald-800">Select & Add</span>
                             <div className="flex flex-col gap-3">
-                              {product.options.map((opt, idx) => (
-                                <div 
-                                  key={opt.size}
-                                  className={`p-4 border flex justify-between items-center transition-all group overflow-hidden relative ${
-                                    selectedSizes[product.id] === idx ? 'border-emerald-900 bg-emerald-900/5 shadow-sm' : 'border-brand-border'
-                                  }`}
-                                  onClick={() => setSelectedSizes(prev => ({ ...prev, [product.id]: idx }))}
-                                >
-                                  <div className="flex items-center gap-4 relative z-10 cursor-pointer">
-                                    {opt.image && (
-                                      <div className="w-12 h-12 bg-gray-100 flex-shrink-0">
-                                        <img src={opt.image} alt="" className="w-full h-full object-cover grayscale-[20%]" />
-                                      </div>
-                                    )}
-                                    <div className="flex flex-col">
-                                      <span className="text-sm font-medium">{opt.size}</span>
-                                      <span className="text-emerald-900 font-serif">LKR {opt.price.toLocaleString()}</span>
-                                    </div>
-                                  </div>
-                                  <button 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      addToCart(product, idx);
-                                    }}
-                                    className="p-3 bg-emerald-900 text-white rounded-full hover:bg-emerald-950 transition-all opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 lg:group-hover:translate-x-0 translate-x-4 duration-300"
+                              {product.options.map((opt, idx) => {
+                                const discountPrice = Math.round(opt.price * (subscriptionType === 'annual' ? 0.90 : subscriptionType === 'monthly' ? 0.95 : 1.0));
+                                return (
+                                  <div 
+                                    key={opt.size}
+                                    className={`p-4 border flex justify-between items-center transition-all group overflow-hidden relative ${
+                                      selectedSizes[product.id] === idx ? 'border-emerald-900 bg-emerald-900/5 shadow-sm' : 'border-brand-border'
+                                    }`}
+                                    onClick={() => setSelectedSizes(prev => ({ ...prev, [product.id]: idx }))}
                                   >
-                                    <Plus className="w-4 h-4" />
-                                  </button>
-                                </div>
-                              ))}
+                                    <div className="flex items-center gap-4 relative z-10 cursor-pointer">
+                                      {opt.image && (
+                                        <div className="w-12 h-12 bg-gray-100 flex-shrink-0">
+                                          <img src={opt.image} alt="" className="w-full h-full object-cover grayscale-[20%]" />
+                                        </div>
+                                      )}
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-medium">{opt.size}</span>
+                                        <div className="flex items-baseline gap-2">
+                                          {subscriptionType !== 'none' && (
+                                            <span className="text-xs line-through text-gray-400">LKR {opt.price.toLocaleString()}</span>
+                                          )}
+                                          <span className="text-emerald-950 font-serif font-medium">
+                                            LKR {discountPrice.toLocaleString()}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        addToCart(product, idx);
+                                      }}
+                                      className="p-3 bg-emerald-900 text-white rounded-full hover:bg-emerald-950 transition-all opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 lg:group-hover:translate-x-0 translate-x-4 duration-300"
+                                    >
+                                      <Plus className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-center gap-8 border-t border-brand-border pt-10">
                           <div className="flex flex-col">
-                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 mb-2">Subscription Ready</span>
-                            <label className="flex items-center gap-3 cursor-pointer group">
-                              <div 
-                                onClick={() => setIsSubscribing(!isSubscribing)}
-                                className={`w-10 h-5 rounded-full transition-colors relative ${isSubscribing ? 'bg-emerald-800' : 'bg-gray-200'}`}
-                              >
-                                <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${isSubscribing ? 'left-5.5' : 'left-0.5'}`}></div>
-                              </div>
-                              <span className="text-sm font-light text-gray-500">Enable Subscription (-10%)</span>
-                            </label>
+                            <span className="text-sm uppercase tracking-widest font-extrabold text-emerald-850 mb-2">Select Purchase Plan</span>
+                            <div className="flex gap-2 bg-emerald-900/5 p-1 rounded-xl max-w-sm border border-emerald-900/10">
+                              {[
+                                { id: 'none', label: 'One-off', discount: 'Regular' },
+                                { id: 'monthly', label: 'Monthly', discount: 'Save 5%', delivery: 'Free Delivery' },
+                                { id: 'annual', label: 'Annual', discount: 'Save 10%', delivery: 'Free Delivery' }
+                              ].map((plan) => (
+                                <button
+                                  key={plan.id}
+                                  onClick={() => setSubscriptionType(plan.id as 'none' | 'monthly' | 'annual')}
+                                  className={`py-2 px-3 rounded-lg flex flex-col items-center justify-center transition-all ${
+                                    subscriptionType === plan.id 
+                                      ? 'bg-emerald-900 text-white shadow-sm' 
+                                      : 'text-gray-500 hover:text-emerald-900 hover:bg-white/50'
+                                  }`}
+                                >
+                                  <span className={`font-bold uppercase tracking-wider ${
+                                    subscriptionType === plan.id ? 'text-white text-sm' : 'text-gray-655 text-xs'
+                                  }`}>{plan.label}</span>
+                                  <span className={`font-serif font-bold mt-1 tracking-wide ${
+                                    subscriptionType === plan.id ? 'text-emerald-200 text-sm' : 'text-emerald-900 text-sm'
+                                  }`}>
+                                    {plan.discount}
+                                  </span>
+                                  {plan.delivery && (
+                                    <span className={`font-extrabold uppercase mt-0.5 tracking-wider ${
+                                      subscriptionType === plan.id ? 'text-emerald-100 text-[11px]' : 'text-emerald-850 text-[11px]'
+                                    }`}>
+                                      {plan.delivery}
+                                    </span>
+                                  )}
+                                </button>
+                              ))}
+                            </div>
                           </div>
-                          {isSubscribing && (
-                             <div className="flex gap-2 p-1 bg-brand-bg md:border-l border-brand-border md:pl-8">
-                               {[30, 45, 60].map(days => (
-                                 <button
-                                   key={days}
-                                   onClick={() => setSubFrequency(days)}
-                                   className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all ${
-                                     subFrequency === days ? 'bg-emerald-900 text-white shadow-lg' : 'text-gray-400 hover:text-emerald-800'
-                                   }`}
-                                 >
-                                   {days}d
-                                 </button>
-                               ))}
+                          {subscriptionType !== 'none' && (
+                             <div className="flex items-center gap-3 bg-brand-bg p-3 rounded-lg border border-brand-border h-fit my-auto">
+                               <span className="text-xs md:text-sm uppercase tracking-widest font-bold text-gray-500">Interval:</span>
+                               <div className="flex gap-1.5">
+                                 {[20, 45, 60].map(days => (
+                                   <button
+                                     key={days}
+                                     onClick={() => setSubFrequency(days)}
+                                     className={`py-1.5 px-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded ${
+                                       subFrequency === days ? 'bg-emerald-800 text-white' : 'text-gray-455 hover:bg-gray-50'
+                                     }`}
+                                   >
+                                     {days}d
+                                   </button>
+                                 ))}
+                               </div>
                              </div>
                           )}
                         </div>
@@ -791,6 +1043,18 @@ export default function App() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </motion.div>
+          ) : currentView === 'subscribe' ? (
+            <motion.div
+              key="subscribe"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="p-8 md:p-16 lg:p-24"
+            >
+              <div className="max-w-6xl mx-auto">
+                <WhySubscribe />
               </div>
             </motion.div>
           ) : (
@@ -804,7 +1068,7 @@ export default function App() {
               <div className="max-w-6xl mx-auto">
                 <header className="mb-20 flex justify-between items-end">
                   <div>
-                    <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 block mb-4">Account Dashboard</span>
+                    <span className="text-sm uppercase tracking-[0.25em] font-extrabold text-gray-500 block mb-4">Account Dashboard</span>
                     <h2 className="text-6xl font-serif italic">Your Orders</h2>
                   </div>
                   <p className="text-gray-400 font-light italic">Tracking status for artisanal nourishment</p>
@@ -818,7 +1082,7 @@ export default function App() {
                     <p className="font-serif italic text-3xl mb-4">No orders yet</p>
                     <button 
                       onClick={() => setCurrentView('products')}
-                      className="text-xs uppercase tracking-widest font-bold text-emerald-900 border-b border-emerald-900 pb-1"
+                      className="text-sm uppercase tracking-widest font-bold text-emerald-900 border-b border-emerald-900 pb-1"
                     >
                       Browse the collection
                     </button>
@@ -830,8 +1094,8 @@ export default function App() {
                         {/* Order Header */}
                         <div className="p-8 bg-brand-bg flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-brand-border">
                           <div>
-                            <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 block mb-1">Order ID: {order.id.slice(0, 8)}</span>
-                            <span className="text-sm font-medium">{new Date(order.createdAt?.seconds * 1000).toLocaleDateString()} — LKR {order.total.toLocaleString()}</span>
+                            <span className="text-xs uppercase tracking-widest font-bold text-gray-550 block mb-1">Order ID: {order.id.slice(0, 8)}</span>
+                            <span className="text-base font-semibold">{new Date(order.createdAt?.seconds * 1000).toLocaleDateString()} — LKR {order.total.toLocaleString()}</span>
                           </div>
                           
                           {/* Order Status Timeline */}
@@ -850,7 +1114,7 @@ export default function App() {
                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-emerald-900 text-white shadow-lg' : 'bg-gray-100 text-gray-300'}`}>
                                     <step.icon className="w-4 h-4" />
                                   </div>
-                                  <span className={`text-[10px] uppercase tracking-widest font-bold ${isActive ? 'text-emerald-900' : 'text-gray-300'}`}>{step.label}</span>
+                                  <span className={`text-xs uppercase tracking-widest font-bold ${isActive ? 'text-emerald-900' : 'text-gray-300'}`}>{step.label}</span>
                                   {i < 2 && <div className={`w-4 h-[1px] ${isActive ? 'bg-emerald-900' : 'bg-gray-100'} hidden lg:block`} />}
                                 </div>
                               );
@@ -861,7 +1125,7 @@ export default function App() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                           {/* Items List */}
                           <div className="p-8 border-b md:border-b-0 md:border-r border-brand-border">
-                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Items</span>
+                            <span className="text-xs uppercase tracking-widest font-bold text-emerald-800 block mb-6">Items</span>
                             <div className="space-y-4">
                               {order.items.map((item: any, idx: number) => (
                                 <div key={idx} className="flex justify-between items-center text-sm italic">
@@ -874,7 +1138,7 @@ export default function App() {
 
                           {/* Payment Receipt Upload */}
                           <div className="p-8 border-b md:border-b-0 md:border-r border-brand-border bg-emerald-900/5">
-                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Payment Receipt</span>
+                            <span className="text-xs uppercase tracking-widest font-bold text-emerald-800 block mb-6">Payment Receipt</span>
                             {order.paymentReceipt ? (
                               <div className="py-4">
                                 <div className="flex items-center gap-3 text-emerald-800 mb-2">
@@ -895,7 +1159,7 @@ export default function App() {
                                     if (e.target.value) uploadReceipt(order, e.target.value);
                                   }}
                                 />
-                                <button className="w-full py-3 bg-emerald-900 text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-950 transition-all">
+                                <button className="w-full py-3.5 bg-emerald-900 text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-950 transition-all">
                                   <CloudUpload className="w-4 h-4" /> Upload Receipt
                                 </button>
                               </div>
@@ -904,9 +1168,9 @@ export default function App() {
 
                           {/* Contact Info */}
                           <div className="p-8">
-                            <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-6">Delivery Details</span>
-                            <div className="space-y-2 italic text-sm text-gray-600">
-                              <p className="font-medium text-black not-italic">{order.contactInfo?.name}</p>
+                            <span className="text-xs uppercase tracking-widest font-bold text-emerald-850 block mb-6">Delivery Details</span>
+                            <div className="space-y-2 italic text-sm text-gray-650">
+                              <p className="font-semibold text-black not-italic">{order.contactInfo?.name}</p>
                               <p>{order.contactInfo?.phone}</p>
                               <p className="leading-relaxed">{order.contactInfo?.address}</p>
                             </div>
@@ -923,15 +1187,18 @@ export default function App() {
 
 
         {/* Footer */}
-        <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-end gap-12 border-t border-brand-border">
-          <div className="space-y-4">
-            <span className="text-[10px] uppercase tracking-widest text-gray-400">Inquiries</span>
-            <p className="text-2xl font-serif italic">hello@haloa.pets</p>
-            <p className="text-xs uppercase tracking-widest font-medium">Colombo, Sri Lanka</p>
+        <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-center sm:items-end gap-12 border-t border-brand-border bg-white">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            <img src="input_file_4.png" alt="Haloa Badge" className="w-20 h-20 object-contain rounded-2xl border border-brand-border p-1 bg-brand-bg shrink-0 shadow-sm" referrerPolicy="no-referrer" />
+            <div className="space-y-3 text-center sm:text-left">
+              <span className="text-xs uppercase tracking-widest text-emerald-800 font-extrabold block">Est. 2025 ; Inquiries</span>
+              <p className="text-3xl font-serif italic text-emerald-950">hello@haloa.pets</p>
+              <p className="text-sm uppercase tracking-widest font-bold text-gray-500">Jaffna, Sri Lanka</p>
+            </div>
           </div>
-          <div className="text-[10px] leading-relaxed text-gray-400 max-w-xs text-right uppercase tracking-widest space-y-2">
-            <p>© 2024 Haloa Pet Co.</p>
-            <p>All products are free from preservatives, additives, and hidden salt.</p>
+          <div className="text-xs leading-relaxed text-gray-500 max-w-sm text-center sm:text-right uppercase tracking-wider space-y-2 font-medium">
+            <p className="font-extrabold text-[#111]">© 2026 Haloa Pet Co.</p>
+            <p className="text-emerald-900 font-semibold bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-900/10">All products are free from preservatives, additives, and hidden salt.</p>
           </div>
         </footer>
       </div>
@@ -970,52 +1237,59 @@ export default function App() {
                 {checkoutStep === 'cart' ? (
                   <div className="space-y-8">
                     {cart.length === 0 ? (
-                      <div className="h-full flex flex-col items-center justify-center text-center opacity-30 space-y-4 pt-20">
+                       <div className="h-full flex flex-col items-center justify-center text-center opacity-30 space-y-4 pt-20">
                         <ShoppingBag className="w-12 h-12" />
                         <p className="font-serif italic text-2xl">Your bag is empty</p>
                         <button 
                           onClick={() => setIsCartOpen(false)}
-                          className="text-xs uppercase tracking-widest font-bold border-b border-black pb-1 hover:opacity-70 transition-all"
+                          className="text-sm uppercase tracking-widest font-extrabold border-b border-black pb-1 hover:opacity-70 transition-all"
                         >
                           Discover Haloa
                         </button>
                       </div>
                     ) : (
                       <div className="space-y-8">
-                        {cart.map((item) => (
-                          <div key={`${item.id}-${item.size}-${item.isSubscription}-${item.frequency}`} className="flex gap-6 group border-b border-brand-border pb-6">
-                            <div className="w-20 h-24 bg-gray-50 flex-shrink-0">
-                              <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale-[20%]" referrerPolicy="no-referrer" />
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start mb-1">
-                                <h4 className="font-serif italic text-xl">
-                                  {item.name}
-                                  {item.isSubscription && <span className="text-[9px] uppercase tracking-widest font-bold text-emerald-800 ml-2">({item.frequency} Day Cycle)</span>}
-                                </h4>
-                                <button 
-                                  onClick={() => updateQuantity(item.id, item.size, -item.quantity, item.isSubscription, item.frequency)}
-                                  className="p-1 opacity-0 group-hover:opacity-100 hover:text-red-800 transition-all"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
+                        {cart.map((item) => {
+                          const itemPrice = item.subscriptionType === 'annual' ? Math.round(item.price * 0.9) : item.subscriptionType === 'monthly' ? Math.round(item.price * 0.95) : item.price;
+                          return (
+                            <div key={`${item.id}-${item.size}-${item.subscriptionType || 'none'}-${item.frequency || ''}`} className="flex gap-6 group border-b border-brand-border pb-6">
+                              <div className="w-20 h-24 bg-gray-50 flex-shrink-0">
+                                <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale-[20%]" referrerPolicy="no-referrer" />
                               </div>
-                              <p className="text-[10px] uppercase tracking-widest text-emerald-800 font-bold mb-4">
-                                {item.size} — LKR {item.price.toLocaleString()} {item.isSubscription && <span className="text-emerald-900/40">- 10% Off</span>}
-                              </p>
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4 text-sm font-medium">
-                                  <button onClick={() => updateQuantity(item.id, item.size, -1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">—</button>
-                                  <span>{item.quantity}</span>
-                                  <button onClick={() => updateQuantity(item.id, item.size, 1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">+</button>
+                              <div className="flex-1">
+                                <div className="flex justify-between items-start mb-1">
+                                  <h4 className="font-serif italic text-xl">
+                                    {item.name}
+                                    {item.isSubscription && (
+                                      <span className="text-[11px] uppercase tracking-widest font-extrabold text-emerald-800 ml-2">
+                                        ({item.frequency}d {item.subscriptionType === 'annual' ? 'Annual Cycle' : 'Monthly Cycle'})
+                                      </span>
+                                    )}
+                                  </h4>
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, item.size, -item.quantity, item.isSubscription, item.frequency)}
+                                    className="p-1 opacity-0 group-hover:opacity-100 hover:text-red-800 transition-all"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
                                 </div>
-                                <span className="font-serif italic">
-                                  LKR {((item.isSubscription ? item.price * 0.9 : item.price) * item.quantity).toLocaleString()}
-                                </span>
+                                <p className="text-xs md:text-sm uppercase tracking-widest text-emerald-800 font-extrabold mb-4">
+                                  {item.size} — LKR {item.price.toLocaleString()} {item.subscriptionType === 'monthly' && <span className="text-emerald-900/60">- 5% Off</span>}{item.subscriptionType === 'annual' && <span className="text-emerald-900/60">- 10% Off</span>}
+                                </p>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-4 text-sm font-medium">
+                                    <button onClick={() => updateQuantity(item.id, item.size, -1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">—</button>
+                                    <span>{item.quantity}</span>
+                                    <button onClick={() => updateQuantity(item.id, item.size, 1, item.isSubscription, item.frequency)} className="hover:text-emerald-800">+</button>
+                                  </div>
+                                  <span className="font-serif italic">
+                                    LKR {(itemPrice * item.quantity).toLocaleString()}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -1023,75 +1297,78 @@ export default function App() {
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
                     <div className="space-y-6">
                       <div className="group">
-                        <label className="block text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2 group-focus-within:text-emerald-800 transition-colors">Recipient</label>
+                        <label className="block text-xs md:text-sm uppercase tracking-widest font-extrabold text-gray-500 mb-2 group-focus-within:text-emerald-800 transition-colors">Recipient</label>
                         <input 
-                          type="text" 
-                          value={contactInfo.name}
-                          onChange={(e) => setContactInfo({ ...contactInfo, name: e.target.value })}
-                          className="w-full bg-brand-bg border-b border-brand-border py-2 focus:outline-none focus:border-emerald-800 transition-colors text-lg font-serif italic"
-                          placeholder="Your Name"
+                           type="text" 
+                           value={contactInfo.name}
+                           onChange={(e) => setContactInfo({ ...contactInfo, name: e.target.value })}
+                           className="w-full bg-brand-bg border-b border-brand-border py-2 focus:outline-none focus:border-emerald-800 transition-colors text-lg font-serif italic"
+                           placeholder="Your Name"
                         />
                       </div>
                       <div className="group">
-                        <label className="block text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2 group-focus-within:text-emerald-800 transition-colors">Contact</label>
+                        <label className="block text-xs md:text-sm uppercase tracking-widest font-extrabold text-gray-500 mb-2 group-focus-within:text-emerald-800 transition-colors">Contact</label>
                         <input 
-                          type="tel" 
-                          value={contactInfo.phone}
-                          onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
-                          className="w-full bg-brand-bg border-b border-brand-border py-2 focus:outline-none focus:border-emerald-800 transition-colors text-lg font-serif italic"
-                          placeholder="077 XXXXXXX"
+                           type="tel" 
+                           value={contactInfo.phone}
+                           onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+                           className="w-full bg-brand-bg border-b border-brand-border py-2 focus:outline-none focus:border-emerald-800 transition-colors text-lg font-serif italic"
+                           placeholder="077 XXXXXXX"
                         />
                       </div>
                       <div className="group">
-                        <label className="block text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2 group-focus-within:text-emerald-800 transition-colors">Address</label>
+                        <label className="block text-xs md:text-sm uppercase tracking-widest font-extrabold text-gray-500 mb-2 group-focus-within:text-emerald-800 transition-colors">Address</label>
                         <textarea 
-                          rows={2}
-                          value={contactInfo.address}
-                          onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
-                          className="w-full bg-brand-bg border-b border-brand-border py-2 focus:outline-none focus:border-emerald-800 transition-colors text-lg font-serif italic resize-none"
-                          placeholder="Your street address"
+                           rows={2}
+                           value={contactInfo.address}
+                           onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
+                           className="w-full bg-brand-bg border-b border-brand-border py-2 focus:outline-none focus:border-emerald-800 transition-colors text-lg font-serif italic resize-none"
+                           placeholder="Your street address"
                         />
                       </div>
                     </div>
                     
                     <div className="p-6 bg-emerald-900/5 border border-emerald-900/10 italic">
-                      <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800 block mb-4">Summary</span>
-                      {cart.map(item => (
-                        <div key={item.id+item.size+item.isSubscription+(item.frequency || '')} className="flex justify-between text-sm mb-1">
-                          <span className="opacity-60">
-                            {item.name} ({item.size}) {item.isSubscription ? `(${item.frequency} Days)` : ''} x {item.quantity}
-                          </span>
-                          <span>LKR {((item.isSubscription ? item.price * 0.9 : item.price) * item.quantity).toLocaleString()}</span>
-                        </div>
-                      ))}
+                      <span className="text-xs md:text-sm uppercase tracking-widest font-extrabold text-emerald-800 block mb-4">Summary</span>
+                      {cart.map(item => {
+                        const itemPrice = item.subscriptionType === 'annual' ? Math.round(item.price * 0.9) : item.subscriptionType === 'monthly' ? Math.round(item.price * 0.95) : item.price;
+                        return (
+                          <div key={`${item.id}-${item.size}-${item.subscriptionType || 'none'}-${item.frequency || ''}`} className="flex justify-between text-sm mb-1 font-sans">
+                            <span className="opacity-70 font-medium">
+                              {item.name} ({item.size}) {item.isSubscription ? `(${item.frequency}d)` : ''} x {item.quantity}
+                            </span>
+                            <span className="font-serif">LKR {(itemPrice * item.quantity).toLocaleString()}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </motion.div>
                 ) : checkoutStep === 'payment' ? (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
                     <div className="p-8 bg-emerald-900/5 border border-emerald-900/10 rounded-[2rem]">
-                      <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-900 block mb-6">Bank Transfer Details</span>
+                      <span className="text-xs md:text-sm uppercase tracking-widest font-extrabold text-emerald-900 block mb-6">Bank Transfer Details</span>
                       <div className="space-y-4 font-serif italic text-lg leading-relaxed">
                         <div className="flex justify-between border-b border-emerald-900/10 pb-2">
-                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Bank</span>
-                          <span>Commercial Bank</span>
+                          <span className="opacity-50 text-xs uppercase font-sans font-extrabold tracking-widest text-[#555]">Bank</span>
+                          <span className="font-semibold text-emerald-950">Commercial Bank</span>
                         </div>
                         <div className="flex justify-between border-b border-emerald-900/10 pb-2">
-                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Name</span>
-                          <span>Haloa Pet Care (PVT) LTD</span>
+                          <span className="opacity-50 text-xs uppercase font-sans font-extrabold tracking-widest text-[#555]">Name</span>
+                          <span className="font-semibold text-emerald-950">Haloa Pet Care (PVT) LTD</span>
                         </div>
                         <div className="flex justify-between border-b border-emerald-900/10 pb-2">
-                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Account</span>
-                          <span>1000 4567 8901</span>
+                          <span className="opacity-50 text-xs uppercase font-sans font-extrabold tracking-widest text-[#555]">Account</span>
+                          <span className="font-mono text-emerald-950 font-bold">1000 4567 8901</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="opacity-40 text-xs uppercase font-sans font-bold tracking-widest">Branch</span>
-                          <span>Colombo 07</span>
+                          <span className="opacity-50 text-xs uppercase font-sans font-extrabold tracking-widest text-[#555]">Branch</span>
+                          <span className="font-semibold text-emerald-950">Colombo 07</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-6">
-                      <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 block mb-4">Quick Pay via App</span>
+                      <span className="text-xs md:text-sm uppercase tracking-widest font-extrabold text-gray-500 block mb-4">Quick Pay via App</span>
                       <div className="grid grid-cols-2 gap-4">
                         {[
                           { name: 'ComBank Digital', color: 'bg-[#005cbb]', url: 'https://www.combankdigital.com' },
@@ -1106,10 +1383,10 @@ export default function App() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-3 p-3 border border-brand-border hover:border-emerald-900 transition-all rounded-xl grayscale hover:grayscale-0"
                           >
-                            <div className={`w-8 h-8 ${bank.color} rounded-lg flex items-center justify-center text-white text-[8px] font-bold text-center leading-tight`}>
+                            <div className={`w-8 h-8 ${bank.color} rounded-lg flex items-center justify-center text-white text-[10px] font-extrabold text-center leading-tight`}>
                               {bank.name.split(' ')[0]}
                             </div>
-                            <span className="text-[10px] uppercase tracking-widest font-bold whitespace-nowrap">{bank.name}</span>
+                            <span className="text-xs font-extrabold uppercase tracking-widest whitespace-nowrap">{bank.name}</span>
                           </a>
                         ))}
                       </div>
@@ -1117,7 +1394,7 @@ export default function App() {
 
                     <div className="p-6 bg-amber-50 border border-amber-200 rounded-xl flex gap-4">
                       <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                      <p className="text-xs text-amber-800 leading-relaxed italic font-light">
+                      <p className="text-sm text-amber-900 leading-relaxed italic font-normal">
                         After payment, please log in to your account and upload the receipt under "My Orders" to confirm your delivery.
                       </p>
                     </div>
@@ -1132,8 +1409,8 @@ export default function App() {
                       <Check className="w-10 h-10 text-emerald-900" />
                     </div>
                     <h4 className="text-4xl font-serif italic">Order Placed</h4>
-                    <p className="text-gray-500 font-light leading-relaxed">
-                      Your order <span className="font-serif italic text-black">#{lastOrderId?.slice(0, 8)}</span> has been registered. 
+                    <p className="text-gray-600 font-normal leading-relaxed text-base">
+                      Your order <span className="font-serif italic text-black font-semibold">#{lastOrderId?.slice(0, 8)}</span> has been registered. 
                       Once we confirm your payment, your artisanal treats will be prepared.
                     </p>
                     <button 
@@ -1141,7 +1418,7 @@ export default function App() {
                         setCurrentView('dashboard');
                         setIsCartOpen(false);
                       }}
-                      className="px-8 py-4 bg-emerald-900 text-white text-[10px] font-bold uppercase tracking-widest flex items-center gap-4 group"
+                      className="px-8 py-4 bg-emerald-900 text-white text-xs md:text-sm font-extrabold uppercase tracking-widest flex items-center gap-4 group"
                     >
                       Track Order <div className="w-6 h-[1px] bg-white group-hover:w-10 transition-all"></div>
                     </button>
@@ -1152,7 +1429,7 @@ export default function App() {
               {cart.length > 0 && checkoutStep !== 'success' && (
                 <div className="p-8 border-t border-brand-border bg-brand-bg space-y-8">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-30">Subtotal</span>
+                    <span className="text-xs font-extrabold tracking-widest uppercase opacity-40 text-gray-500">Subtotal</span>
                     <span className="text-4xl font-serif italic">LKR {cartTotal.toLocaleString()}</span>
                   </div>
                   <div className="flex gap-4">
@@ -1172,7 +1449,7 @@ export default function App() {
                       <div className="w-8 h-[1px] bg-white group-hover:w-16 transition-all"></div>
                     </button>
                   </div>
-                  <p className="text-[9px] text-center opacity-40 uppercase tracking-[0.2em]">
+                  <p className="text-xs font-extrabold text-center opacity-40 uppercase tracking-[0.2em]">
                     {checkoutStep === 'cart' ? 'Sri Lanka Delivery' : 'Bank Transfer / Cash'}
                   </p>
                 </div>
