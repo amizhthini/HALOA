@@ -1205,7 +1205,7 @@ export default function App() {
         {/* Footer */}
         <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-center sm:items-end gap-12 border-t border-brand-border bg-white">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <img src="/images/footer.png" alt="Haloa Badge" className="w-20 h-20 object-contain rounded-2xl border border-brand-border p-1 bg-brand-bg shrink-0 shadow-sm" referrerPolicy="no-referrer" />
+            <img src="/images/footer.png" alt="Haloa Badge" className="w-40 h-40 object-contain rounded-2xl border border-brand-border p-1 bg-brand-bg shrink-0 shadow-sm" referrerPolicy="no-referrer" />
             <div className="space-y-3 text-center sm:text-left">
               <span className="text-xs uppercase tracking-widest text-emerald-800 font-extrabold block">Est. 2025 ; Inquiries</span>
               <p className="text-3xl font-serif italic text-emerald-950">hello@haloa.pets</p>
