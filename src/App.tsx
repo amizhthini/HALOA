@@ -99,7 +99,7 @@ const PRODUCTS: Product[] = [
     id: 'crunchy-paws',
     name: 'Crunchy Paws',
     description: 'Dehydrated chicken feet. A natural source of glucosamine and chondroitin for healthy joints.',
-    image: 'input_file_0.png',
+   image: '/images/12pknew.png',
     benefits: [
       { icon: Bone, text: 'Natural Glucosamine & Chondroitin for Joint Support' },
       { icon: Smile, text: 'Promotes Dental Hygiene through Chewing Action' },
@@ -113,7 +113,7 @@ const PRODUCTS: Product[] = [
         title: 'Locally Sourced',
         description: 'Supporting local Sri Lankan farmers while ensuring the shortest supply chain for maximum freshness.',
         icon: MapPin,
-        image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=600'
+         image: '/images/legs.png'
       },
       {
         step: '02',
@@ -121,7 +121,7 @@ const PRODUCTS: Product[] = [
         title: 'Low-Temp Air Dried',
         description: 'We dehydrate our treats at precise temperatures to preserve vital nutrients and enzymes without harsh additives.',
         icon: Wind,
-        image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600'
+       image: '/images/henlegs.png'
       },
       {
         step: '03',
@@ -129,20 +129,20 @@ const PRODUCTS: Product[] = [
         title: 'No Additives',
         description: 'Absolutely zero salt, sugar, preservatives, or artificial colors. Just 100% natural chicken feet.',
         icon: Shield,
-        image: 'input_file_2.png'
+        image: '/images/12.jpg'
       }
     ],
     options: [
-      { size: '12 Pieces', price: 599, image: 'input_file_2.png' },
-      { size: '20 Pieces', price: 799, image: 'input_file_1.png' },
-      { size: '40 Pieces', price: 1990, image: 'input_file_0.png' },
+      { size: '12 Pieces', price: 499, image: '/images/12pknew.png' },
+      { size: '20 Pieces', price: 799, image: '/images/20pk.png' },
+      { size: '40 Pieces', price: 1699, image: '/images/40pkneww.png' },
     ]
   },
   {
     id: 'collagen',
     name: 'Beef Collagen',
     description: 'Premium liquid collagen for dogs. Supports skin elasticity, coat shine, and joint mobility.',
-    image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=800',
+   image: '/images/soon.png',
     benefits: [
       { icon: Zap, text: 'Improves Skin Elasticity & Coat Shine' },
       { icon: Shield, text: 'Supports Healthy Gut Lining' },
@@ -156,7 +156,7 @@ const PRODUCTS: Product[] = [
         title: 'Ethically Farmed',
         description: 'Our beef collagen is sourced from grass-fed cattle, ensuring a pure and ethical supply chain.',
         icon: Leaf,
-        image: 'https://images.unsplash.com/photo-1502472545331-cb294ee1648c?auto=format&fit=crop&q=80&w=600'
+        image: 'images/abcd.jpg'
       },
       {
         step: '02',
@@ -164,7 +164,7 @@ const PRODUCTS: Product[] = [
         title: 'Small Batch Extraction',
         description: 'Simmered slowly at low temperatures to preserve the delicate peptide structures of the collagen.',
         icon: Sparkles,
-        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=600'
+       image: '/images/14.jpg'
       },
       {
         step: '03',
@@ -172,19 +172,19 @@ const PRODUCTS: Product[] = [
         title: 'Triple Filtration',
         description: 'Fine filtration ensures a smooth, highly concentrated liquid collagen free from any sediment or additives.',
         icon: Shield,
-        image: 'https://images.unsplash.com/photo-1626224734893-6902967675e4?auto=format&fit=crop&q=80&w=600'
+       image: '/images/beaf.jpeg'
       }
     ],
     options: [
-      { size: '250ml Jar', price: 999, image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=400' },
-      { size: '500ml Jar', price: 1799, image: 'https://images.unsplash.com/photo-1626224734893-6902967675e4?auto=format&fit=crop&q=80&w=400' }
+      { size: '250ml Jar', price: 999, image: '/images/soon.png' },
+      { size: '500ml Jar', price: 1799, image: '/images/soon.png' }
     ]
   },
   {
     id: 'liver-treats',
     name: 'Liver Treats',
     description: 'Iron-rich, protein-packed dehydrated liver bites. The ultimate high-value training reward.',
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=800',
+    image: '/images/soon.png',
     benefits: [
       { icon: Zap, text: 'Concentrated Source of Vitamin A & Iron' },
       { icon: Smile, text: 'Highly Palatable for Training' },
@@ -198,7 +198,7 @@ const PRODUCTS: Product[] = [
         title: 'Premium Raw Cuts',
         description: 'We select only the finest human-grade liver, ensuring every bite is packed with vitamins.',
         icon: Check,
-        image: 'https://images.unsplash.com/photo-1607623198457-7aad0d6a8348?auto=format&fit=crop&q=80&w=600'
+        image: '/images/puppy.png'
       },
       {
         step: '02',
@@ -206,7 +206,7 @@ const PRODUCTS: Product[] = [
         title: 'Precision Slicing',
         description: 'Bite-sized pieces are carefully cut to maintain texture while allowing for even dehydration.',
         icon: Sparkles,
-        image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=600'
+        image: 'images/18.jpg'
       },
       {
         step: '03',
@@ -214,16 +214,51 @@ const PRODUCTS: Product[] = [
         title: 'Fresh Dehydration',
         description: 'Cold-air dehydration locks in nutrition without compromising the high-value flavor profile.',
         icon: Wind,
-        image: 'https://images.unsplash.com/photo-1591769225440-811ad7d62ca3?auto=format&fit=crop&q=80&w=600'
+         image: '/images/17.jpg'
       }
     ],
     options: [
-      { size: '50g Bag', price: 399, image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=400' },
-      { size: '100g Bag', price: 699, image: 'https://images.unsplash.com/photo-1591769225440-811ad7d62ca3?auto=format&fit=crop&q=80&w=400' },
-      { size: '250g Bag', price: 1499, image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=400' }
+       { size: '50g Bag', price: 399, image: '/images/soon.png' },
+      { size: '100g Bag', price: 699, image: '/images/soon.png' },
+      { size: '250g Bag', price: 1499, image: '/images/soon.png' }
     ]
   }
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Why Subscribe Component with Interactive Graphical View
 const WhySubscribe = () => {
@@ -575,12 +610,16 @@ export default function App() {
         {/* Navigation */}
         <nav className="h-20 flex items-center justify-between px-8 md:px-16 border-b border-brand-border bg-brand-bg/80 backdrop-blur-sm sticky top-0 z-30">
           <div className="flex items-center gap-6">
-            <button 
-              onClick={() => setCurrentView('home')}
-              className="hover:opacity-80 transition-opacity flex items-center py-1"
-            >
-              <span className="text-2xl md:text-3xl font-serif tracking-[0.2em] font-bold text-emerald-900">HALOA</span>
-            </button>
+           <button
+  onClick={() => setCurrentView('home')}
+  className="hover:opacity-80 transition-opacity flex items-center py-1"
+>
+  <img
+    src="/images/logo.png"
+    alt="HALOA Logo"
+    className="h-12 md:h-16 w-auto"
+  />
+</button>
             <div className="hidden md:flex items-center gap-6 ml-8">
               <button 
                 onClick={() => setCurrentView('home')}
@@ -1189,7 +1228,7 @@ export default function App() {
         {/* Footer */}
         <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-center sm:items-end gap-12 border-t border-brand-border bg-white">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <img src="input_file_4.png" alt="Haloa Badge" className="w-20 h-20 object-contain rounded-2xl border border-brand-border p-1 bg-brand-bg shrink-0 shadow-sm" referrerPolicy="no-referrer" />
+            <img src="/images/footer.png" alt="Haloa Badge" className="w-20 h-20 object-contain rounded-2xl border border-brand-border p-1 bg-brand-bg shrink-0 shadow-sm" referrerPolicy="no-referrer" />
             <div className="space-y-3 text-center sm:text-left">
               <span className="text-xs uppercase tracking-widest text-emerald-800 font-extrabold block">Est. 2025 ; Inquiries</span>
               <p className="text-3xl font-serif italic text-emerald-950">hello@haloa.pets</p>
