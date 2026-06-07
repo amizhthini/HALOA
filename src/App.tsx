@@ -571,7 +571,7 @@ export default function App() {
               <img
                 src="/images/logo.png"
                 alt="HALOA Logo"
-                className="h-12 md:h-16 w-auto"
+                className="h-15 md:h-20 w-auto"
               />
             </button>
             <div className="hidden md:flex items-center gap-6 ml-8">
