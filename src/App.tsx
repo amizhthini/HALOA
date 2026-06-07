@@ -564,16 +564,7 @@ export default function App() {
         {/* Navigation */}
         <nav className="h-20 flex items-center justify-between px-8 md:px-16 border-b border-brand-border bg-brand-bg/80 backdrop-blur-sm sticky top-0 z-30">
           <div className="flex items-center gap-6">
-            <button
-              onClick={() => setCurrentView('home')}
-              className="hover:opacity-80 transition-opacity flex items-center py-1"
-            >
-              <img
-                src="/images/logo.png"
-                alt="HALOA Logo"
-                className="h-20 md:h-24 w-auto"
-              />
-            </button>
+           <button onClick={() => setCurrentView('home')} className="hover:opacity-80 transition-opacity flex items-center py-1" > <span className="text-2xl md:text-3xl font-serif tracking-[0.2em] font-bold text-emerald-900">HALOAaaaaa</span> </button>
             <div className="hidden md:flex items-center gap-6 ml-8">
               <button 
                 onClick={() => setCurrentView('home')}
