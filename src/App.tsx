@@ -99,7 +99,7 @@ const PRODUCTS: Product[] = [
     id: 'crunchy-paws',
     name: 'Crunchy Paws',
     description: 'Dehydrated chicken feet. A natural source of glucosamine and chondroitin for healthy joints.',
-   image: '/images/12pknew.png',
+    image: 'input_file_0.png',
     benefits: [
       { icon: Bone, text: 'Natural Glucosamine & Chondroitin for Joint Support' },
       { icon: Smile, text: 'Promotes Dental Hygiene through Chewing Action' },
@@ -113,7 +113,7 @@ const PRODUCTS: Product[] = [
         title: 'Locally Sourced',
         description: 'Supporting local Sri Lankan farmers while ensuring the shortest supply chain for maximum freshness.',
         icon: MapPin,
-         image: '/images/legs.png'
+        image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=600'
       },
       {
         step: '02',
@@ -121,7 +121,7 @@ const PRODUCTS: Product[] = [
         title: 'Low-Temp Air Dried',
         description: 'We dehydrate our treats at precise temperatures to preserve vital nutrients and enzymes without harsh additives.',
         icon: Wind,
-       image: '/images/henlegs.png'
+        image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600'
       },
       {
         step: '03',
@@ -129,20 +129,20 @@ const PRODUCTS: Product[] = [
         title: 'No Additives',
         description: 'Absolutely zero salt, sugar, preservatives, or artificial colors. Just 100% natural chicken feet.',
         icon: Shield,
-        image: '/images/12.jpg'
+        image: 'input_file_2.png'
       }
     ],
     options: [
-      { size: '12 Pieces', price: 499, image: '/images/12pknew.png' },
-      { size: '20 Pieces', price: 799, image: '/images/20pk.png' },
-      { size: '40 Pieces', price: 1699, image: '/images/40pkneww.png' },
+      { size: '12 Pieces', price: 599, image: 'input_file_2.png' },
+      { size: '20 Pieces', price: 799, image: 'input_file_1.png' },
+      { size: '40 Pieces', price: 1990, image: 'input_file_0.png' },
     ]
   },
   {
     id: 'collagen',
     name: 'Beef Collagen',
     description: 'Premium liquid collagen for dogs. Supports skin elasticity, coat shine, and joint mobility.',
-   image: '/images/soon.png',
+    image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=800',
     benefits: [
       { icon: Zap, text: 'Improves Skin Elasticity & Coat Shine' },
       { icon: Shield, text: 'Supports Healthy Gut Lining' },
@@ -156,7 +156,7 @@ const PRODUCTS: Product[] = [
         title: 'Ethically Farmed',
         description: 'Our beef collagen is sourced from grass-fed cattle, ensuring a pure and ethical supply chain.',
         icon: Leaf,
-        image: 'images/abcd.jpg'
+        image: 'https://images.unsplash.com/photo-1502472545331-cb294ee1648c?auto=format&fit=crop&q=80&w=600'
       },
       {
         step: '02',
@@ -164,7 +164,7 @@ const PRODUCTS: Product[] = [
         title: 'Small Batch Extraction',
         description: 'Simmered slowly at low temperatures to preserve the delicate peptide structures of the collagen.',
         icon: Sparkles,
-       image: '/images/14.jpg'
+        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=600'
       },
       {
         step: '03',
@@ -172,19 +172,19 @@ const PRODUCTS: Product[] = [
         title: 'Triple Filtration',
         description: 'Fine filtration ensures a smooth, highly concentrated liquid collagen free from any sediment or additives.',
         icon: Shield,
-       image: '/images/beaf.jpeg'
+        image: 'https://images.unsplash.com/photo-1626224734893-6902967675e4?auto=format&fit=crop&q=80&w=600'
       }
     ],
     options: [
-      { size: '250ml Jar', price: 999, image: '/images/soon.png' },
-      { size: '500ml Jar', price: 1799, image: '/images/soon.png' }
+      { size: '250ml Jar', price: 999, image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=400' },
+      { size: '500ml Jar', price: 1799, image: 'https://images.unsplash.com/photo-1626224734893-6902967675e4?auto=format&fit=crop&q=80&w=400' }
     ]
   },
   {
     id: 'liver-treats',
     name: 'Liver Treats',
     description: 'Iron-rich, protein-packed dehydrated liver bites. The ultimate high-value training reward.',
-    image: '/images/soon.png',
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=800',
     benefits: [
       { icon: Zap, text: 'Concentrated Source of Vitamin A & Iron' },
       { icon: Smile, text: 'Highly Palatable for Training' },
@@ -198,7 +198,7 @@ const PRODUCTS: Product[] = [
         title: 'Premium Raw Cuts',
         description: 'We select only the finest human-grade liver, ensuring every bite is packed with vitamins.',
         icon: Check,
-        image: '/images/puppy.png'
+        image: 'https://images.unsplash.com/photo-1607623198457-7aad0d6a8348?auto=format&fit=crop&q=80&w=600'
       },
       {
         step: '02',
@@ -206,7 +206,7 @@ const PRODUCTS: Product[] = [
         title: 'Precision Slicing',
         description: 'Bite-sized pieces are carefully cut to maintain texture while allowing for even dehydration.',
         icon: Sparkles,
-        image: 'images/18.jpg'
+        image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=600'
       },
       {
         step: '03',
@@ -214,21 +214,24 @@ const PRODUCTS: Product[] = [
         title: 'Fresh Dehydration',
         description: 'Cold-air dehydration locks in nutrition without compromising the high-value flavor profile.',
         icon: Wind,
-         image: '/images/17.jpg'
+        image: 'https://images.unsplash.com/photo-1591769225440-811ad7d62ca3?auto=format&fit=crop&q=80&w=600'
       }
     ],
     options: [
-       { size: '50g Bag', price: 399, image: '/images/soon.png' },
-      { size: '100g Bag', price: 699, image: '/images/soon.png' },
-      { size: '250g Bag', price: 1499, image: '/images/soon.png' }
+      { size: '50g Bag', price: 399, image: 'https://images.unsplash.com/photo-1589924691995-400dc99ee5af?auto=format&fit=crop&q=80&w=400' },
+      { size: '100g Bag', price: 699, image: 'https://images.unsplash.com/photo-1591769225440-811ad7d62ca3?auto=format&fit=crop&q=80&w=400' },
+      { size: '250g Bag', price: 1499, image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=400' }
     ]
   }
 ];
 
 // Why Subscribe Component with Interactive Graphical View
 const WhySubscribe = () => {
-  const [estimateFoodPrice, setEstimateFoodPrice] = useState(15000);
+  const [estimateFoodPrice, setEstimateFoodPrice] = useState(15000); // Default estimate monthly budget in LKR
   
+  // Calculate yearly costs:
+  // Assume 12 orders a year
+  // One-off delivery estimate: LKR 800 per delivery
   const deliveryCostPerOrder = 800;
   const yearlyOneOff = (estimateFoodPrice * 12) + (deliveryCostPerOrder * 12);
   const yearlyMonthly = (estimateFoodPrice * 0.95 * 12);
@@ -288,6 +291,7 @@ const WhySubscribe = () => {
               <h3 className="text-3xl font-serif italic text-emerald-950">Yearly Value Calculator</h3>
             </div>
             
+            {/* Input Slider for Monthly Budget */}
             <div className="space-y-4">
               <div className="flex justify-between text-base font-semibold">
                 <span className="text-gray-600">Monthly Pet Food Expense:</span>
@@ -309,7 +313,9 @@ const WhySubscribe = () => {
               </div>
             </div>
 
+            {/* Graphical Visualization Bars */}
             <div className="space-y-6 pt-6 border-t border-brand-border">
+              {/* One-off Bar */}
               <div className="space-y-2">
                 <div className="flex justify-between text-sm font-semibold">
                   <span className="text-gray-600">One-off Orders (12 Months)</span>
@@ -327,6 +333,7 @@ const WhySubscribe = () => {
                 </div>
               </div>
 
+              {/* Monthly Sub Bar */}
               <div className="space-y-2">
                 <div className="flex justify-between text-sm font-semibold">
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -348,6 +355,7 @@ const WhySubscribe = () => {
                 </div>
               </div>
 
+              {/* Annual Sub Bar */}
               <div className="space-y-2">
                 <div className="flex justify-between text-sm font-semibold">
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -370,6 +378,7 @@ const WhySubscribe = () => {
               </div>
             </div>
 
+            {/* Subtle disclaimer */}
             <p className="text-xs text-gray-500 font-normal italic leading-relaxed text-center">
               *Calculated based on estimated average pet feeding cycles consisting of 12 orders per year with an estimated local shipping charge of LKR 800 per shipment. Subscriptions enjoy free delivery on all shipments no matter the intervals (20d, 45d, 60d).
             </p>
@@ -400,26 +409,36 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
-      if (u) {
-        setIsLoadingOrders(true);
-        const q = query(
-          collection(db, 'orders'), 
-          where('userId', '==', u.uid),
-          orderBy('createdAt', 'desc')
-        );
-        const unsubOrders = onSnapshot(q, (snapshot) => {
-          setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-          setIsLoadingOrders(false);
-        }, (error) => {
-          handleFirestoreError(error, OperationType.LIST, 'orders');
-        });
-        return unsubOrders;
-      } else {
-        setOrders([]);
-      }
     });
     return () => unsubscribe();
   }, []);
+
+  const userId = user?.uid;
+
+  useEffect(() => {
+    if (!userId) {
+      setOrders([]);
+      setIsLoadingOrders(false);
+      return;
+    }
+
+    setIsLoadingOrders(true);
+    const q = query(
+      collection(db, 'orders'), 
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc')
+    );
+    const unsubOrders = onSnapshot(q, (snapshot) => {
+      setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setIsLoadingOrders(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'orders');
+    });
+
+    return () => {
+      unsubOrders();
+    };
+  }, [userId]);
 
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'info' | 'payment' | 'success'>('cart');
   const [contactInfo, setContactInfo] = useState({ name: '', phone: '', address: '' });
@@ -472,7 +491,7 @@ export default function App() {
     if (!user) {
       const result = await signInWithGoogle();
       if (!result) return;
-      return;
+      return; // User is now signed in, allow them to click again or continue
     }
 
     if (checkoutStep === 'cart') {
@@ -484,6 +503,7 @@ export default function App() {
       }
       setCheckoutStep('payment');
     } else if (checkoutStep === 'payment') {
+      // Create Order in Firestore
       try {
         const orderData = {
           userId: user.uid,
@@ -514,6 +534,7 @@ export default function App() {
         receiptTimestamp: serverTimestamp()
       });
 
+      // Send Email Notification to Admin
       await fetch('/api/notify-admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -564,15 +585,11 @@ export default function App() {
         {/* Navigation */}
         <nav className="h-20 flex items-center justify-between px-8 md:px-16 border-b border-brand-border bg-brand-bg/80 backdrop-blur-sm sticky top-0 z-30">
           <div className="flex items-center gap-6">
-            <button
+            <button 
               onClick={() => setCurrentView('home')}
               className="hover:opacity-80 transition-opacity flex items-center py-1"
             >
-              <img
-                src="/images/logo.png"
-                alt="HALOA Logo"
-                className="h-12 md:h-16 w-auto"
-              />
+              <span className="text-2xl md:text-3xl font-serif tracking-[0.2em] font-bold text-emerald-900">HALOA</span>
             </button>
             <div className="hidden md:flex items-center gap-6 ml-8">
               <button 
@@ -901,164 +918,140 @@ export default function App() {
                 </header>
 
                 <div className="space-y-32">
-                  {PRODUCTS.map((product) => {
-                    // ─── FIX: derive the active image from selectedSizes ───
-                    const activeIdx = selectedSizes[product.id] ?? 0;
-                    const activeImage =
-                      product.options[activeIdx]?.image || product.image;
-
-                    return (
-                      <div key={product.id} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                        {/* ── LEFT: Big reactive image ── */}
-                        <div className="lg:col-span-6 relative">
-                          <div className="aspect-[4/5] bg-brand-bg border border-brand-border overflow-hidden relative shadow-sm">
-                            <AnimatePresence mode="wait">
-                              <motion.img
-                                key={`${product.id}-${activeIdx}`}
-                                initial={{ opacity: 0, scale: 1.05 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.97 }}
-                                transition={{ duration: 0.35 }}
-                                src={activeImage}
-                                alt={product.name}
-                                className="w-full h-full object-cover grayscale-[20%] transition-all duration-700 hover:grayscale-0"
-                                referrerPolicy="no-referrer"
-                              />
-                            </AnimatePresence>
-                          </div>
-                        </div>
-
-                        {/* ── RIGHT: Details & size selector ── */}
-                        <div className="lg:col-span-6">
-                          <h3 className="text-5xl font-serif mb-6 italic">{product.name}</h3>
-                          <p className="text-xl text-gray-500 font-light mb-10 leading-relaxed max-w-lg">{product.description}</p>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                            <div className="space-y-4">
-                              <span className="text-xs uppercase tracking-widest font-extrabold text-emerald-800">Key Benefits</span>
-                              <ul className="space-y-3">
-                                {product.benefits.map((benefit, i) => (
-                                  <li key={i} className="flex items-start gap-4 text-base font-normal text-gray-600">
-                                    <benefit.icon className="w-4 h-4 text-emerald-800 mt-1 flex-shrink-0" />
-                                    {benefit.text}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            <div className="space-y-4">
-                              <span className="text-xs uppercase tracking-widest font-extrabold text-emerald-800">Select & Add</span>
-                              <div className="flex flex-col gap-3">
-                                {product.options.map((opt, idx) => {
-                                  const discountPrice = Math.round(opt.price * (subscriptionType === 'annual' ? 0.90 : subscriptionType === 'monthly' ? 0.95 : 1.0));
-                                  const isSelected = (selectedSizes[product.id] ?? 0) === idx;
-                                  return (
-                                    <div 
-                                      key={opt.size}
-                                      className={`p-4 border flex justify-between items-center transition-all group overflow-hidden relative cursor-pointer ${
-                                        isSelected
-                                          ? 'border-emerald-900 bg-emerald-900/5 shadow-sm'
-                                          : 'border-brand-border hover:border-emerald-900/30'
-                                      }`}
-                                      onClick={() => setSelectedSizes(prev => ({ ...prev, [product.id]: idx }))}
-                                    >
-                                      <div className="flex items-center gap-4 relative z-10">
-                                        {opt.image && (
-                                          <div className={`w-12 h-12 flex-shrink-0 border-2 transition-all ${
-                                            isSelected ? 'border-emerald-900' : 'border-transparent'
-                                          }`}>
-                                            <img src={opt.image} alt="" className="w-full h-full object-cover grayscale-[20%]" />
-                                          </div>
-                                        )}
-                                        <div className="flex flex-col">
-                                          <span className="text-sm font-medium">{opt.size}</span>
-                                          <div className="flex items-baseline gap-2">
-                                            {subscriptionType !== 'none' && (
-                                              <span className="text-xs line-through text-gray-400">LKR {opt.price.toLocaleString()}</span>
-                                            )}
-                                            <span className="text-emerald-950 font-serif font-medium">
-                                              LKR {discountPrice.toLocaleString()}
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <button 
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setSelectedSizes(prev => ({ ...prev, [product.id]: idx }));
-                                          addToCart(product, idx);
-                                        }}
-                                        className="p-3 bg-emerald-900 text-white rounded-full hover:bg-emerald-950 transition-all opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 lg:group-hover:translate-x-0 translate-x-4 duration-300"
-                                      >
-                                        <Plus className="w-4 h-4" />
-                                      </button>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col sm:flex-row items-center gap-8 border-t border-brand-border pt-10">
-                            <div className="flex flex-col">
-                              <span className="text-sm uppercase tracking-widest font-extrabold text-emerald-850 mb-2">Select Purchase Plan</span>
-                              <div className="flex gap-2 bg-emerald-900/5 p-1 rounded-xl max-w-sm border border-emerald-900/10">
-                                {[
-                                  { id: 'none', label: 'One-off', discount: 'Regular' },
-                                  { id: 'monthly', label: 'Monthly', discount: 'Save 5%', delivery: 'Free Delivery' },
-                                  { id: 'annual', label: 'Annual', discount: 'Save 10%', delivery: 'Free Delivery' }
-                                ].map((plan) => (
-                                  <button
-                                    key={plan.id}
-                                    onClick={() => setSubscriptionType(plan.id as 'none' | 'monthly' | 'annual')}
-                                    className={`py-2 px-3 rounded-lg flex flex-col items-center justify-center transition-all ${
-                                      subscriptionType === plan.id 
-                                        ? 'bg-emerald-900 text-white shadow-sm' 
-                                        : 'text-gray-500 hover:text-emerald-900 hover:bg-white/50'
-                                    }`}
-                                  >
-                                    <span className={`font-bold uppercase tracking-wider ${
-                                      subscriptionType === plan.id ? 'text-white text-sm' : 'text-gray-655 text-xs'
-                                    }`}>{plan.label}</span>
-                                    <span className={`font-serif font-bold mt-1 tracking-wide ${
-                                      subscriptionType === plan.id ? 'text-emerald-200 text-sm' : 'text-emerald-900 text-sm'
-                                    }`}>
-                                      {plan.discount}
-                                    </span>
-                                    {plan.delivery && (
-                                      <span className={`font-extrabold uppercase mt-0.5 tracking-wider ${
-                                        subscriptionType === plan.id ? 'text-emerald-100 text-[11px]' : 'text-emerald-850 text-[11px]'
-                                      }`}>
-                                        {plan.delivery}
-                                      </span>
-                                    )}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                            {subscriptionType !== 'none' && (
-                               <div className="flex items-center gap-3 bg-brand-bg p-3 rounded-lg border border-brand-border h-fit my-auto">
-                                 <span className="text-xs md:text-sm uppercase tracking-widest font-bold text-gray-500">Interval:</span>
-                                 <div className="flex gap-1.5">
-                                   {[20, 45, 60].map(days => (
-                                     <button
-                                       key={days}
-                                       onClick={() => setSubFrequency(days)}
-                                       className={`py-1.5 px-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded ${
-                                         subFrequency === days ? 'bg-emerald-800 text-white' : 'text-gray-455 hover:bg-gray-50'
-                                       }`}
-                                     >
-                                       {days}d
-                                     </button>
-                                   ))}
-                                 </div>
-                               </div>
-                            )}
-                          </div>
+                  {PRODUCTS.map((product) => (
+                    <div key={product.id} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                      <div className="lg:col-span-6 relative">
+                        <div className="aspect-[4/5] bg-brand-bg border border-brand-border overflow-hidden relative shadow-sm">
+                          <img 
+                            src={product.image} 
+                            alt={product.name}
+                            className="w-full h-full object-cover grayscale-[20%] transition-all duration-1000 hover:grayscale-0"
+                            referrerPolicy="no-referrer"
+                          />
                         </div>
                       </div>
-                    );
-                  })}
+                      <div className="lg:col-span-6">
+                        <h3 className="text-5xl font-serif mb-6 italic">{product.name}</h3>
+                        <p className="text-xl text-gray-500 font-light mb-10 leading-relaxed max-w-lg">{product.description}</p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                          <div className="space-y-4">
+                            <span className="text-xs uppercase tracking-widest font-extrabold text-emerald-800">Key Benefits</span>
+                            <ul className="space-y-3">
+                              {product.benefits.map((benefit, i) => (
+                                <li key={i} className="flex items-start gap-4 text-base font-normal text-gray-600">
+                                  <benefit.icon className="w-4 h-4 text-emerald-800 mt-1 flex-shrink-0" />
+                                  {benefit.text}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="space-y-4">
+                            <span className="text-xs uppercase tracking-widest font-extrabold text-emerald-800">Select & Add</span>
+                            <div className="flex flex-col gap-3">
+                              {product.options.map((opt, idx) => {
+                                const discountPrice = Math.round(opt.price * (subscriptionType === 'annual' ? 0.90 : subscriptionType === 'monthly' ? 0.95 : 1.0));
+                                return (
+                                  <div 
+                                    key={opt.size}
+                                    className={`p-4 border flex justify-between items-center transition-all group overflow-hidden relative ${
+                                      selectedSizes[product.id] === idx ? 'border-emerald-900 bg-emerald-900/5 shadow-sm' : 'border-brand-border'
+                                    }`}
+                                    onClick={() => setSelectedSizes(prev => ({ ...prev, [product.id]: idx }))}
+                                  >
+                                    <div className="flex items-center gap-4 relative z-10 cursor-pointer">
+                                      {opt.image && (
+                                        <div className="w-12 h-12 bg-gray-100 flex-shrink-0">
+                                          <img src={opt.image} alt="" className="w-full h-full object-cover grayscale-[20%]" />
+                                        </div>
+                                      )}
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-medium">{opt.size}</span>
+                                        <div className="flex items-baseline gap-2">
+                                          {subscriptionType !== 'none' && (
+                                            <span className="text-xs line-through text-gray-400">LKR {opt.price.toLocaleString()}</span>
+                                          )}
+                                          <span className="text-emerald-950 font-serif font-medium">
+                                            LKR {discountPrice.toLocaleString()}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        addToCart(product, idx);
+                                      }}
+                                      className="p-3 bg-emerald-900 text-white rounded-full hover:bg-emerald-950 transition-all opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 lg:group-hover:translate-x-0 translate-x-4 duration-300"
+                                    >
+                                      <Plus className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-center gap-8 border-t border-brand-border pt-10">
+                          <div className="flex flex-col">
+                            <span className="text-sm uppercase tracking-widest font-extrabold text-emerald-850 mb-2">Select Purchase Plan</span>
+                            <div className="flex gap-2 bg-emerald-900/5 p-1 rounded-xl max-w-sm border border-emerald-900/10">
+                              {[
+                                { id: 'none', label: 'One-off', discount: 'Regular' },
+                                { id: 'monthly', label: 'Monthly', discount: 'Save 5%', delivery: 'Free Delivery' },
+                                { id: 'annual', label: 'Annual', discount: 'Save 10%', delivery: 'Free Delivery' }
+                              ].map((plan) => (
+                                <button
+                                  key={plan.id}
+                                  onClick={() => setSubscriptionType(plan.id as 'none' | 'monthly' | 'annual')}
+                                  className={`py-2 px-3 rounded-lg flex flex-col items-center justify-center transition-all ${
+                                    subscriptionType === plan.id 
+                                      ? 'bg-emerald-900 text-white shadow-sm' 
+                                      : 'text-gray-500 hover:text-emerald-900 hover:bg-white/50'
+                                  }`}
+                                >
+                                  <span className={`font-bold uppercase tracking-wider ${
+                                    subscriptionType === plan.id ? 'text-white text-sm' : 'text-gray-655 text-xs'
+                                  }`}>{plan.label}</span>
+                                  <span className={`font-serif font-bold mt-1 tracking-wide ${
+                                    subscriptionType === plan.id ? 'text-emerald-200 text-sm' : 'text-emerald-900 text-sm'
+                                  }`}>
+                                    {plan.discount}
+                                  </span>
+                                  {plan.delivery && (
+                                    <span className={`font-extrabold uppercase mt-0.5 tracking-wider ${
+                                      subscriptionType === plan.id ? 'text-emerald-100 text-[11px]' : 'text-emerald-850 text-[11px]'
+                                    }`}>
+                                      {plan.delivery}
+                                    </span>
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          {subscriptionType !== 'none' && (
+                             <div className="flex items-center gap-3 bg-brand-bg p-3 rounded-lg border border-brand-border h-fit my-auto">
+                               <span className="text-xs md:text-sm uppercase tracking-widest font-bold text-gray-500">Interval:</span>
+                               <div className="flex gap-1.5">
+                                 {[20, 45, 60].map(days => (
+                                   <button
+                                     key={days}
+                                     onClick={() => setSubFrequency(days)}
+                                     className={`py-1.5 px-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded ${
+                                       subFrequency === days ? 'bg-emerald-800 text-white' : 'text-gray-455 hover:bg-gray-50'
+                                     }`}
+                                   >
+                                     {days}d
+                                   </button>
+                                 ))}
+                               </div>
+                             </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -1202,10 +1195,11 @@ export default function App() {
           )}
         </AnimatePresence>
 
+
         {/* Footer */}
         <footer className="p-8 md:p-16 lg:p-24 flex flex-col md:flex-row justify-between items-center sm:items-end gap-12 border-t border-brand-border bg-white">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <img src="/images/footer.png" alt="Haloa Badge" className="w-20 h-20 object-contain rounded-2xl border border-brand-border p-1 bg-brand-bg shrink-0 shadow-sm" referrerPolicy="no-referrer" />
+            <img src="input_file_4.png" alt="Haloa Badge" className="w-20 h-20 object-contain rounded-2xl border border-brand-border p-1 bg-brand-bg shrink-0 shadow-sm" referrerPolicy="no-referrer" />
             <div className="space-y-3 text-center sm:text-left">
               <span className="text-xs uppercase tracking-widest text-emerald-800 font-extrabold block">Est. 2025 ; Inquiries</span>
               <p className="text-3xl font-serif italic text-emerald-950">hello@haloa.pets</p>
@@ -1219,7 +1213,7 @@ export default function App() {
         </footer>
       </div>
 
-      {/* Shopping Cart Drawer */}
+      {/* Shopping Cart Drawer (Preserved Logic, Re-Styled) */}
       <AnimatePresence>
         {isCartOpen && (
           <>
@@ -1477,3 +1471,4 @@ export default function App() {
     </div>
   );
 }
+
